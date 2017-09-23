@@ -1,0 +1,24 @@
+{
+  "name": "wireframe-app",
+  "version": "1.0.0",
+  "description": "my wireframe app",
+  "main": "script.js",
+  "dependencies": {
+    "express": "^4.15.4",
+    "fabric": "^1.7.19"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gselli12/wireframe-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gselli12/wireframe-app/issues"
+  },
+  "homepage": "https://github.com/gselli12/wireframe-app#readme"
+}

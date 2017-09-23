@@ -1,0 +1,25 @@
+body {
+    background-color: rgb(185, 186, 178);
+    font-family: 'Patrick Hand SC', cursive;
+
+}
+
+.wireframe {
+    margin-top: 50px;
+    margin-left: 100px;
+    width: 1024px;
+    height: 600px;
+}
+
+#canvas {
+    background-color: white;
+    border-radius: 10px;
+    margin: 0;
+    background-size: 20px 20px;
+    background-image: linear-gradient(to right, rgb(234, 236, 239) 0.5px, transparent 1px), linear-gradient(to bottom, rgb(234, 236, 239) 0.5px, transparent 1px);
+}
+
+.cursor-position {
+    display: flex;
+    flex-direction: row;
+}
