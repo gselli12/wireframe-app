@@ -23,3 +23,8 @@ body {
     display: flex;
     flex-direction: row;
 }
+
+.element-position {
+    display: flex;
+    flex-direction: row;
+}

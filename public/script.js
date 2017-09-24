@@ -1,6 +1,6 @@
 let canvas = new fabric.Canvas("canvas");
 let wireframe = $(".wireframe");
-var rect, circle, image, text, textbox, button, group, heading;
+var rect, circle, image, text, inputfield, button, group, heading;
 const bordercolor = "black";
 const backgroundcolor = "white";
 const strokeWidth = 2;
@@ -19,8 +19,6 @@ $(".create-rect").on("click", () => {
     });
     canvas.add(rect);
 });
-
-console.log(fabric);
 
 $(".create-circle").on("click", () => {
     circle = new fabric.Circle({
@@ -47,28 +45,7 @@ $(".create-image").on("click", () => {
 });
 
 $(".create-text").on("click", () => {
-    text = new fabric.Text("yoyo", {
-        fontSize: 24,
-        fontFamily,
-        left: 50,
-        top: 50
-    });
-    canvas.add(text);
-});
-
-$(".create-heading").on("click", () => {
-    heading = new fabric.Text("heading", {
-        fontSize: 32,
-        fontFamily,
-        left: 50,
-        right: 50
-    });
-    canvas.add(heading);
-});
-
-$(".create-textbox").on("click", () => {
-    let text = "your input";
-
+    var textDefault = "Your text"
     var txtBoxConfig = {
         fontSize: 24,
         fontFamily: fontFamily,
@@ -79,8 +56,57 @@ $(".create-textbox").on("click", () => {
         shadow: new fabric.Shadow( { color: 'rgba(0,0,0,0.3)', offsetX: 0.05, offsetY: 0.05 }),
         borderColor: bordercolor
     };
-    textbox = new fabric.Textbox(text, txtBoxConfig);
-    canvas.add(textbox);
+
+    text = new fabric.Textbox(textDefault, txtBoxConfig);
+    canvas.add(text);
+});
+
+$(".create-heading").on("click", () => {
+    var textDefault = "Your Heading";
+    var txtBoxConfig = {
+        fontSize: 32,
+        fontFamily: fontFamily,
+        textAlign: 'left',
+        width: 200,
+        height: 60,
+        backgroundColor: backgroundcolor,
+        shadow: new fabric.Shadow( { color: 'rgba(0,0,0,0.3)', offsetX: 0.05, offsetY: 0.05 }),
+        borderColor: bordercolor
+    };
+
+    heading = new fabric.Text("heading", {
+        fontSize: 32,
+        fontFamily,
+        left: 50,
+        right: 50
+    });
+
+    text = new fabric.Textbox(textDefault, txtBoxConfig);
+    canvas.add(text);
+});
+
+$(".create-inputfield").on("click", () => {
+    let text = new fabric.Text("|" ,{
+        left: 60,
+        top: 52,
+        fontFamily: fontFamily,
+        fontSize: 20,
+        textAlign: "center",
+    });
+
+    var box = new fabric.Rect({
+        left: 50,
+        top: 50,
+        fill: "white",
+        width: 100,
+        height: 30,
+        strokeWidth: 2,
+        ry: 10,
+        stroke: bordercolor,
+    });
+
+    var group = new fabric.Group([box, text]);
+    canvas.add(group);
 });
 
 $(".create-button").on("click", () => {
@@ -105,14 +131,46 @@ $(".create-button").on("click", () => {
 });
 
 
-
+var copiedObjects = [];
 let onKeyDownHandler = (e) => {
+    e = e || window.event;
+    var key = e.which || e.keyCode;
+    var ctrl = e.ctrlKey ? e.ctrlKey : ((key === 17) ? true : false);
+    //DELETE OBJ ON ESC
     if(e.keyCode == 46) {
-        var activeObject = canvas.getActiveObject();
+        let activeObject = canvas.getActiveObject();
+        canvas.remove(activeObject);
+        return;
+    }
+    //COPY OBJ ON CTRL + C
+    else if(ctrl && e.keyCode == 67) {
+        copiedObjects = [];
+        let activeObject = canvas.getActiveObject()
+        copiedObjects.push(activeObject)
+        console.log("copied", copiedObjects);
+    }
+    //PASTE OBJ ON CTRL + V
+    else if(ctrl && e.keyCode == 86) {
+        pasteOne(fabric.util.object.clone(copiedObjects[0]));
+    }
+    //CUT OBJ ON CTRL + X
+    else if(ctrl && e.keyCode == 88) {
+        copiedObjects = [];
+        let activeObject = canvas.getActiveObject()
+        copiedObjects.push(activeObject);
         canvas.remove(activeObject);
         return;
     }
 };
+
+function pasteOne(clone) {
+    clone.left += 100; //add 100 to the left position
+    clone.top += 100; //add 100 to the top position
+    clone.set('canvas', canvas); //Set the canvas attribute to our canvas
+    clone.setCoords(); //Must call this when we cahnged our coordinates
+    canvas.add(clone); //Add the item
+}
+
 
 
 
@@ -120,6 +178,23 @@ $(".wireframe").mousemove((e) => {
     $(".cursor-x").html("x: " + (Math.round(e.pageX - wireframe.offset().left)));
     $(".cursor-y").html("y: " + (Math.round(e.pageY - wireframe.offset().top)));
 });
+
+//DETECTING OBJECT POSITION IN CANVAS:
+// function onObjectSelected(e) {
+//     console.log(e.e.pageX)
+// }
+// canvas.on('object:selected', ()=> {
+//     console.log("selected");
+//     canvas.on("mouse:down", () => {
+//         console.log("mousedown");
+//         canvas.on("mouse:move", (e) => {
+//             console.log(e.e);
+//             console.log((e.e.clientX - Math.round(wireframe.offset().left)) + " | " + (e.e.clientY - Math.round(wireframe.offset().top)));
+//             canvas.on("mouse:up").off("mouse:move");
+//         })
+//     })
+// });
+
 
 var isDragging;
 $("body").mousedown((e) => {
