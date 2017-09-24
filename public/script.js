@@ -26,7 +26,7 @@ $(".create-circle").on("click", () => {
         fill: backgroundcolor,
         left: 100,
         top: 100,
-        strokeWidth: 2,
+        strokeWidth,
         stroke: bordercolor
     });
     canvas.add(circle);
@@ -39,7 +39,7 @@ $(".create-image").on("click", () => {
         fill: 'grey',
         width: 200,
         height: 70,
-        strokeWidth: 2
+        strokeWidth
     });
     canvas.add(image);
 });
@@ -48,7 +48,7 @@ $(".create-text").on("click", () => {
     var textDefault = "Your text"
     var txtBoxConfig = {
         fontSize: 24,
-        fontFamily: fontFamily,
+        fontFamily,
         textAlign: 'left',
         width: 200,
         height: 60,
@@ -65,7 +65,7 @@ $(".create-heading").on("click", () => {
     var textDefault = "Your Heading";
     var txtBoxConfig = {
         fontSize: 32,
-        fontFamily: fontFamily,
+        fontFamily,
         textAlign: 'left',
         width: 200,
         height: 60,
@@ -89,7 +89,7 @@ $(".create-inputfield").on("click", () => {
     let text = new fabric.Text("|" ,{
         left: 60,
         top: 52,
-        fontFamily: fontFamily,
+        fontFamily,
         fontSize: 20,
         textAlign: "center",
     });
@@ -100,7 +100,7 @@ $(".create-inputfield").on("click", () => {
         fill: "white",
         width: 100,
         height: 30,
-        strokeWidth: 2,
+        strokeWidth,
         ry: 10,
         stroke: bordercolor,
     });
@@ -116,13 +116,13 @@ $(".create-button").on("click", () => {
         fill: "rgb(209, 210, 211)",
         width: 70,
         height: 30,
-        strokeWidth: 2,
+        strokeWidth,
         ry: 10,
     });
     text = new fabric.Text("button", {
         left: 60,
         top: 52,
-        fontFamily: fontFamily,
+        fontFamily,
         fontSize: 20,
         textAlign: "center",
     });
@@ -136,6 +136,9 @@ let onKeyDownHandler = (e) => {
     e = e || window.event;
     var key = e.which || e.keyCode;
     var ctrl = e.ctrlKey ? e.ctrlKey : ((key === 17) ? true : false);
+    let activeObject = canvas.getActiveObject();
+    // let activeGroup = canvas.getActiveGroup();
+
     //DELETE OBJ ON ESC
     if(e.keyCode == 46) {
         let activeObject = canvas.getActiveObject();
@@ -145,18 +148,31 @@ let onKeyDownHandler = (e) => {
     //COPY OBJ ON CTRL + C
     else if(ctrl && e.keyCode == 67) {
         copiedObjects = [];
-        let activeObject = canvas.getActiveObject()
-        copiedObjects.push(activeObject)
+        activeObject = canvas.getActiveObject();
+
+        //if more than one obj is selected
+        if(activeObject._objects)  {
+            Object.keys(activeObject._objects).forEach(object => {
+                copiedObjects.push(activeObject._objects[object]);
+            });
+            console.log("copied", copiedObjects);
+            return;
+        }
+
+        copiedObjects.push(activeObject);
         console.log("copied", copiedObjects);
     }
     //PASTE OBJ ON CTRL + V
     else if(ctrl && e.keyCode == 86) {
-        pasteOne(fabric.util.object.clone(copiedObjects[0]));
+        copiedObjects.forEach(object => {
+            pasteOne(fabric.util.object.clone(object));
+        });
+
     }
     //CUT OBJ ON CTRL + X
     else if(ctrl && e.keyCode == 88) {
         copiedObjects = [];
-        let activeObject = canvas.getActiveObject()
+        activeObject = canvas.getActiveObject()
         copiedObjects.push(activeObject);
         canvas.remove(activeObject);
         return;
@@ -167,46 +183,40 @@ function pasteOne(clone) {
     clone.left += 100; //add 100 to the left position
     clone.top += 100; //add 100 to the top position
     clone.set('canvas', canvas); //Set the canvas attribute to our canvas
-    clone.setCoords(); //Must call this when we cahnged our coordinates
+    clone.setCoords(); //Must call this when we changed our coordinates
     canvas.add(clone); //Add the item
 }
 
 
 
-
+//DETECTING CURSOR POSITION IN CANVAS
 $(".wireframe").mousemove((e) => {
     $(".cursor-x").html("x: " + (Math.round(e.pageX - wireframe.offset().left)));
     $(".cursor-y").html("y: " + (Math.round(e.pageY - wireframe.offset().top)));
 });
 
 //DETECTING OBJECT POSITION IN CANVAS:
-// function onObjectSelected(e) {
-//     console.log(e.e.pageX)
-// }
-// canvas.on('object:selected', ()=> {
-//     console.log("selected");
-//     canvas.on("mouse:down", () => {
-//         console.log("mousedown");
-//         canvas.on("mouse:move", (e) => {
-//             console.log(e.e);
-//             console.log((e.e.clientX - Math.round(wireframe.offset().left)) + " | " + (e.e.clientY - Math.round(wireframe.offset().top)));
-//             canvas.on("mouse:up").off("mouse:move");
-//         })
-//     })
-// });
-
-
-var isDragging;
-$("body").mousedown((e) => {
-    isDragging = false;
-    $("body").mousemove((e) => {
-        isDragging = true;
-        //console.log(e.pageX, e.pageY);
-
-    });
-    $("body").mouseup(() => {
-        $("body").off("mousemove");
+canvas.on('object:selected', (e)=> {
+    $(".element-x").html("x: " + e.target.left);
+    $(".element-y").html("y: " + e.target.top);
+    canvas.on("object:moving", (e) => {
+        $(".element-x").html("x: " + e.target.left);
+        $(".element-y").html("y: " + e.target.top);
     });
 });
+
+
+// var isDragging;
+// $("body").mousedown((e) => {
+//     isDragging = false;
+//     $("body").mousemove((e) => {
+//         isDragging = true;
+        //console.log(e.pageX, e.pageY);
+//
+//     });
+//     $("body").mouseup(() => {
+//         $("body").off("mousemove");
+//     });
+// });
 
 document.onkeydown = onKeyDownHandler;
