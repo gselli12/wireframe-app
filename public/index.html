@@ -16,16 +16,27 @@
             <button type="button" name="button" class="create-heading">Create Heading</button>
             <button type="button" name="button" class="create-inputfield">Create Inputfield</button>
             <button type="button" name="button" class="create-button">Create Button</button>
+            <img src="settings.png" alt="settings" class="settings-button">
         </header>
+
+        <div class="settings-layover">
+            <div class="settings">
+                <img src="close.png" alt="close" class="close-button">
+                <input id="checkBox" type="checkbox">
+                <label for="grid-view">Grid View</label>
+                <input id="checkBox" type="checkbox">
+                <label for="column-view">Column View</label>
+            </div>
+        </div>
 
         <div class="wireframe">
             <canvas id="canvas" width="1024" height="600"></canvas>
         </div>
 
-        <footer>
+        <footer class="row">
             <div class="footer-elem">
                 Cursor position:
-                <div class="cursor-position">
+                <div class="row">
                     <div class="cursor-x">x: 0</div>
                     <div> &nbsp; | &nbsp;</div>
                     <div class="cursor-y">y: 0</div>
@@ -33,11 +44,20 @@
             </div>
             <div class="footer-elem">
                 Element postition:
-                <div class="element-position">
+                <div class="row">
                     <div class="element-x">x: 0</div>
                     <div> &nbsp; | &nbsp;</div>
                     <div class="element-y">y: 0</div>
                 </div>
+            </div>
+            <div class="footer-elem">
+                Element size:
+                <div class="row">
+                    <div class="element-height">height: 0</div>
+                    <div> &nbsp; | &nbsp;</div>
+                    <div class="element-width">width: 0</div>
+                </div>
+
             </div>
         </footer>
 

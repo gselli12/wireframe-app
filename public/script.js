@@ -197,14 +197,37 @@ $(".wireframe").mousemove((e) => {
 
 //DETECTING OBJECT POSITION IN CANVAS:
 canvas.on('object:selected', (e)=> {
-    $(".element-x").html("x: " + e.target.left);
-    $(".element-y").html("y: " + e.target.top);
+    console.log("selected", e.target)
+    $(".element-x").html("x: " + Math.round(e.target.left));
+    $(".element-y").html("y: " + Math.round(e.target.top));
+    $(".element-height").html("height: " + Math.round(e.target.height));
+    $(".element-width").html("width: " + Math.round(e.target.width));
     canvas.on("object:moving", (e) => {
-        $(".element-x").html("x: " + e.target.left);
-        $(".element-y").html("y: " + e.target.top);
+        $(".element-x").html("x: " + Math.round(e.target.left));
+        $(".element-y").html("y: " + Math.round(e.target.top));
     });
+    canvas.on("object:modified", (e) => {
+        $(".element-height").html("height: " + Math.round(e.target.height * e.target.scaleY));
+        $(".element-width").html("width: " + Math.round(e.target.width * e.target.scaleX));
+    })
 });
 
+$(".settings-button").on("click", () => {
+    $(".settings-layover").addClass("visible")
+});
+
+$(".settings-layover").on("click", () => {
+    console.log("click");
+    $(".settings-layover").removeClass("visible")
+});
+
+canvas.on("click", () => {
+    $(".settings-layover").removeClass("visible")
+});
+
+$(".close-button").on("click", () => {
+    $(".settings-layover").removeClass("visible")
+})
 
 // var isDragging;
 // $("body").mousedown((e) => {

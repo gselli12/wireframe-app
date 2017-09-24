@@ -1,7 +1,7 @@
 body {
     background-color: rgb(185, 186, 178);
     font-family: 'Patrick Hand SC', cursive;
-
+    overflow-x: hidden;
 }
 
 .wireframe {
@@ -19,17 +19,7 @@ body {
     background-image: linear-gradient(to right, rgb(234, 236, 239) 0.5px, transparent 1px), linear-gradient(to bottom, rgb(234, 236, 239) 0.5px, transparent 1px);
 }
 
-.cursor-position {
-    display: flex;
-    flex-direction: row;
-}
-
-.element-position {
-    display: flex;
-    flex-direction: row;
-}
-
-footer {
+.row {
     display: flex;
     flex-direction: row;
 }
@@ -37,4 +27,38 @@ footer {
 .footer-elem {
     margin-top: 10px;
     margin-left: 20px;
+}
+
+
+.settings-button {
+    height: 30px;
+    width: 30px;
+    right: 20px;
+}
+
+.settings-layover {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translateX(100%);
+    color: white;
+}
+
+.settings {
+    height: 1000px;
+    width: 300px;
+    position: absolute;
+    right: 0;
+    background-color: black;
+}
+
+.close-button {
+    height: 30px;
+    width: 30px;
+}
+
+.visible {
+    transform: translateX(0);
 }
