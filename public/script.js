@@ -1,6 +1,6 @@
 let canvas = new fabric.Canvas("canvas");
 let wireframe = $(".wireframe");
-var rect, circle, image, text, inputfield, button, group, heading;
+var rect, circle, image, text, inputfield, button, group, heading, id;
 const bordercolor = "black";
 const backgroundcolor = "white";
 const strokeWidth = 2;
@@ -259,8 +259,6 @@ let mouseDownHandler = (e) => {
 };
 
 
-
-
 //DETECTING CURSOR POSITION IN CANVAS
 $(".wireframe").mousemove((e) => {
     $(".cursor-x").html("x: " + (Math.round(e.pageX - wireframe.offset().left)));
@@ -286,9 +284,35 @@ canvas.on('object:selected', function(e) {
 
 });
 
+//SAVING
+$("#save-button").click(function(){
+    let json = JSON.stringify(canvas.toJSON());
+    console.log(json);
+    if(!id) {
+        id = makeid();
+    }
+
+    $.ajax({
+        url: '/api/' + id,
+        method: 'POST',
+        contentType: "application/json",
+        dataType:'json',
+        data: json
+    });
+});
+
+function makeid() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < 7; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
 
 //SETTINGS SECTION
-$(".settings-button").on("click", () => {
+$("#settings-button").on("click", () => {
     $(".settings-layover").addClass("visible");
     $(".settings").addClass("visible");
 });
