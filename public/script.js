@@ -165,9 +165,8 @@ let onKeyDownHandler = (e) => {
     //PASTE OBJ ON CTRL + V
     else if(ctrl && e.keyCode == 86) {
         copiedObjects.forEach(object => {
-            pasteOne(fabric.util.object.clone(object));
+            paste(object);
         });
-
     }
     //CUT OBJ ON CTRL + X
     else if(ctrl && e.keyCode == 88) {
@@ -179,12 +178,26 @@ let onKeyDownHandler = (e) => {
     }
 };
 
-function pasteOne(clone) {
-    clone.left += 100; //add 100 to the left position
-    clone.top += 100; //add 100 to the top position
-    clone.set('canvas', canvas); //Set the canvas attribute to our canvas
-    clone.setCoords(); //Must call this when we changed our coordinates
-    canvas.add(clone); //Add the item
+function paste(object) {
+    object.clone(function (cloned) {
+        canvas.discardActiveObject();
+        cloned.set({
+            top: cloned.top + 20,
+            evented: true
+        });
+        if (cloned.type === 'activeSelection') {
+            // active selection needs a reference to the canvas.
+            cloned.canvas = canvas;
+            cloned.forEachObject(function (obj) {
+                canvas.add(obj);
+            });
+            cloned.setCoords();
+        } else {
+            canvas.add(cloned);
+        }
+        canvas.setActiveObject(cloned);
+        canvas.requestRenderAll();
+    });
 }
 
 
@@ -202,10 +215,12 @@ canvas.on('object:selected', (e)=> {
     $(".element-y").html("y: " + Math.round(e.target.top));
     $(".element-height").html("height: " + Math.round(e.target.height));
     $(".element-width").html("width: " + Math.round(e.target.width));
+
     canvas.on("object:moving", (e) => {
         $(".element-x").html("x: " + Math.round(e.target.left));
         $(".element-y").html("y: " + Math.round(e.target.top));
     });
+
     canvas.on("object:modified", (e) => {
         $(".element-height").html("height: " + Math.round(e.target.height * e.target.scaleY));
         $(".element-width").html("width: " + Math.round(e.target.width * e.target.scaleX));
@@ -224,15 +239,12 @@ $(".settings-layover").on("click", () => {
     $(".settings").removeClass("visible");
 });
 
-canvas.on("click", () => {
-    $(".settings-layover").removeClass("visible");
-});
-
 $(".close-button").on("click", () => {
     $(".settings-layover").removeClass("visible");
     $(".settings").removeClass("visible");
 });
 
+//SETTINGS OPTIONS
 $("input:checkbox").change( function() {
     $('input[type="checkbox"]').not(this).prop('checked', false);
 
@@ -241,8 +253,6 @@ $("input:checkbox").change( function() {
         $("#canvas").css("background-size", "20px 20px");
         $("#canvas").css("background-position", "0 0");
         $("#grid-size").toggle();
-
-
     } else if ($("#view-column").is(":checked")){
         $("#canvas").css("background-size", "100px 100px");
         $("#canvas").css("background-position", "25px 5px");
@@ -256,12 +266,9 @@ $("input:checkbox").change( function() {
 });
 
 $("#grid-size").on("change", () => {
-    console.log("change");
     let input = $("#range-bar")[0].value+"px";
-    console.log(input);
     let prop = input + " " + input
     $("#range-number").html(input);
-    console.log(prop)
     $("#canvas").css("background-size", prop);
 });
 
