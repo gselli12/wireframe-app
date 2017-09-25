@@ -145,6 +145,7 @@ let onKeyDownHandler = (e) => {
         canvas.remove(activeObject);
         return;
     }
+
     //COPY OBJ ON CTRL + C
     else if(ctrl && e.keyCode == 67) {
         copiedObjects = [];
@@ -162,12 +163,14 @@ let onKeyDownHandler = (e) => {
         copiedObjects.push(activeObject);
         console.log("copied", copiedObjects);
     }
+
     //PASTE OBJ ON CTRL + V
     else if(ctrl && e.keyCode == 86) {
         copiedObjects.forEach(object => {
             paste(object);
         });
     }
+
     //CUT OBJ ON CTRL + X
     else if(ctrl && e.keyCode == 88) {
         copiedObjects = [];
@@ -201,6 +204,62 @@ function paste(object) {
 }
 
 
+//RIGHT MOUSECLICK EVENTS
+let mouseDownHandler = (e) => {
+    var activeObject = canvas.getActiveObject();
+    let pageX = e.pageX;
+    let pageY = e.pageY;
+
+    if(activeObject) {
+        e.preventDefault();
+        $("body ").append((e) => {
+            return `<div class='context-menu'>
+            <div class="copy">Copy</div>
+            <div class="cut">Cut</div>
+            <div class="paste">Paste</div>
+            <div class="send-front">Bring one layer up</div>
+            <div class="send-very-front">Bring to front</div>
+            <div class="send-back">Send one layer back</div>
+            <div class="send-very-back">Send to back</div>
+        </div>`;
+        });
+        $(".context-menu").css("left", pageX);
+        $(".context-menu").css("top", pageY);
+        $(".copy").off().click(() => {
+            copiedObjects = [];
+            copiedObjects.push(activeObject);
+        });
+        $(".paste").off().click(() => {
+            copiedObjects.forEach(object => {
+                paste(object);
+            });
+        });
+        $(".cut").off().click(() => {
+            copiedObjects = [];
+            copiedObjects.push(activeObject);
+            $(".context-menu").remove();
+            canvas.remove(activeObject);
+        });
+        $(".send-front").off().click(() => {
+            canvas.bringForward(activeObject);
+        });
+        $(".send-very-front").off().click(() => {
+            canvas.bringToFront(activeObject);
+        });
+        $(".send-back").off().click(() => {
+            canvas.sendBackwards(activeObject);
+        });
+        $(".send-very-back").off().click(() => {
+            canvas.sendToBack(activeObject);
+        });
+        $(document).on("click", function() {
+            $(".context-menu").remove();
+        });
+    }
+};
+
+
+
 
 //DETECTING CURSOR POSITION IN CANVAS
 $(".wireframe").mousemove((e) => {
@@ -209,8 +268,7 @@ $(".wireframe").mousemove((e) => {
 });
 
 //DETECTING OBJECT POSITION IN CANVAS:
-canvas.on('object:selected', (e)=> {
-    console.log("selected", e.target)
+canvas.on('object:selected', function(e) {
     $(".element-x").html("x: " + Math.round(e.target.left));
     $(".element-y").html("y: " + Math.round(e.target.top));
     $(".element-height").html("height: " + Math.round(e.target.height));
@@ -224,7 +282,8 @@ canvas.on('object:selected', (e)=> {
     canvas.on("object:modified", (e) => {
         $(".element-height").html("height: " + Math.round(e.target.height * e.target.scaleY));
         $(".element-width").html("width: " + Math.round(e.target.width * e.target.scaleX));
-    })
+    });
+
 });
 
 
@@ -267,7 +326,7 @@ $("input:checkbox").change( function() {
 
 $("#grid-size").on("change", () => {
     let input = $("#range-bar")[0].value+"px";
-    let prop = input + " " + input
+    let prop = input + " " + input;
     $("#range-number").html(input);
     $("#canvas").css("background-size", prop);
 });
@@ -285,4 +344,5 @@ $("#grid-size").on("change", () => {
 //     });
 // });
 
+document.oncontextmenu = mouseDownHandler;
 document.onkeydown = onKeyDownHandler;

@@ -75,3 +75,15 @@ body {
 
 #grid-size {
 }
+
+.context-menu {
+    max-width: 200px;
+    max-height: 300px;
+    background-color: white;
+    position: absolute;
+    border: solid black 1px;
+}
+
+.copy:hover, .paste:hover, .cut:hover, .send-very-front:hover, .send-very-back:hover, .send-front:hover, .send-back:hover {
+    background-color: #6db6f9;
+}
