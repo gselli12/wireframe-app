@@ -212,22 +212,58 @@ canvas.on('object:selected', (e)=> {
     })
 });
 
+
+//SETTINGS SECTION
 $(".settings-button").on("click", () => {
-    $(".settings-layover").addClass("visible")
+    $(".settings-layover").addClass("visible");
+    $(".settings").addClass("visible");
 });
 
 $(".settings-layover").on("click", () => {
-    console.log("click");
-    $(".settings-layover").removeClass("visible")
+    $(".settings-layover").removeClass("visible");
+    $(".settings").removeClass("visible");
 });
 
 canvas.on("click", () => {
-    $(".settings-layover").removeClass("visible")
+    $(".settings-layover").removeClass("visible");
 });
 
 $(".close-button").on("click", () => {
-    $(".settings-layover").removeClass("visible")
-})
+    $(".settings-layover").removeClass("visible");
+    $(".settings").removeClass("visible");
+});
+
+$("input:checkbox").change( function() {
+    $('input[type="checkbox"]').not(this).prop('checked', false);
+
+    if($("#view-grid").is(":checked")){
+        $("#canvas").css("background-image", 'linear-gradient(to right, rgb(234, 236, 239) 0.5px, transparent 1px), linear-gradient(to bottom, rgb(234, 236, 239) 0.5px, transparent 1px)');
+        $("#canvas").css("background-size", "20px 20px");
+        $("#canvas").css("background-position", "0 0");
+        $("#grid-size").toggle();
+
+
+    } else if ($("#view-column").is(":checked")){
+        $("#canvas").css("background-size", "100px 100px");
+        $("#canvas").css("background-position", "25px 5px");
+        $("#canvas").css("background-image", "linear-gradient(to right,  #ffe6e6 70px, transparent 1px)");
+        $("#grid-size").css("display", "none");
+    } else {
+        $("#canvas").css("background-image", "none");
+        $("#grid-size").css("display", "none");
+    }
+
+});
+
+$("#grid-size").on("change", () => {
+    console.log("change");
+    let input = $("#range-bar")[0].value+"px";
+    console.log(input);
+    let prop = input + " " + input
+    $("#range-number").html(input);
+    console.log(prop)
+    $("#canvas").css("background-size", prop);
+});
 
 // var isDragging;
 // $("body").mousedown((e) => {

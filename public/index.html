@@ -20,12 +20,25 @@
         </header>
 
         <div class="settings-layover">
-            <div class="settings">
+
+        </div>
+        <div class="settings">
+            <div class="view-settings">
                 <img src="close.png" alt="close" class="close-button">
-                <input id="checkBox" type="checkbox">
-                <label for="grid-view">Grid View</label>
-                <input id="checkBox" type="checkbox">
-                <label for="column-view">Column View</label>
+                <h3>View options</h3>
+                <label for="grid-view">
+                    <input id="view-grid" type="checkbox" name="view-grid" checked>Grid View <br>
+                    <div id="grid-size">
+                        <input type="range" id="range-bar"  min="10" max="50" value="20" />
+                        <span id="range-number">20</span>
+                    </div>
+                </label>
+                <label for="column-view">
+                    <input id="view-column" type="checkbox" name="view-column">Column View
+                </label>
+                <label for="none">
+                    <input id="view-column" type="checkbox" name="view-column">None
+                </label>
             </div>
         </div>
 

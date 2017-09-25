@@ -40,18 +40,28 @@ body {
     height: 100%;
     width: 100%;
     position: absolute;
+    z-index: 100;
     left: 0;
     top: 0;
     transform: translateX(100%);
-    color: white;
 }
 
 .settings {
     height: 1000px;
     width: 300px;
     position: absolute;
+    z-index: 200;
+    top: 0;
     right: 0;
     background-color: black;
+    transform: translateX(100%);
+    color: white;
+
+}
+
+.view-settings {
+    display: flex;
+    flex-direction: column;
 }
 
 .close-button {
@@ -61,4 +71,7 @@ body {
 
 .visible {
     transform: translateX(0);
+}
+
+#grid-size {
 }
