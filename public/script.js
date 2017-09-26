@@ -235,6 +235,7 @@ let mouseDownHandler = (e) => {
             <div class="cut">Cut</div>
             <div class="paste">Paste</div>
             <div class = "group">Group</div>
+            <div class="ungroup">Ungroup</div>
             <div class="send-front">Bring one layer up</div>
             <div class="send-very-front">Bring to front</div>
             <div class="send-back">Send one layer back</div>
@@ -287,6 +288,17 @@ let mouseDownHandler = (e) => {
                     return canvas.remove(obj)
                 })
             }
+        });
+        $(".ungroup").off().click(() => {
+            let activeGroup = canvas.getActiveObject();
+            var destroyedGroup = activeGroup.destroy();
+            var items = destroyedGroup.getObjects();
+
+            items.forEach(item => {
+                canvas.add(item);
+            });
+
+            canvas.remove(activeGroup);
         });
         $(".send-front").off().click(() => {
             canvas.bringForward(activeObject);
