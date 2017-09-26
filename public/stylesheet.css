@@ -89,7 +89,7 @@ header {
     border: solid black 1px;
 }
 
-.copy:hover, .paste:hover, .cut:hover, .send-very-front:hover, .send-very-back:hover, .send-front:hover, .send-back:hover {
+.copy:hover, .paste:hover, .cut:hover, .send-very-front:hover, .send-very-back:hover, .send-front:hover, .send-back:hover, .group:hover {
     background-color: #6db6f9;
 }
 

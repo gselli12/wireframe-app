@@ -157,7 +157,6 @@ let onKeyDownHandler = (e) => {
     var key = e.which || e.keyCode;
     var ctrl = e.ctrlKey ? e.ctrlKey : ((key === 17) ? true : false);
     let activeObject = canvas.getActiveObject();
-    // let activeGroup = canvas.getActiveGroup();
 
     //DELETE OBJ ON ESC
     if(e.keyCode == 46) {
@@ -235,6 +234,7 @@ let mouseDownHandler = (e) => {
             <div class="copy">Copy</div>
             <div class="cut">Cut</div>
             <div class="paste">Paste</div>
+            <div class = "group">Group</div>
             <div class="send-front">Bring one layer up</div>
             <div class="send-very-front">Bring to front</div>
             <div class="send-back">Send one layer back</div>
@@ -257,6 +257,36 @@ let mouseDownHandler = (e) => {
             copiedObjects.push(activeObject);
             $(".context-menu").remove();
             canvas.remove(activeObject);
+        });
+        $(".group").off().click((e) => {
+            var objs = canvas.getActiveObjects();
+            if(objs.length > 1) {
+                let left = [];
+                let top = [];
+                let toGroup = objs.map(object => {
+                    left.push(object.aCoords.tl.x);
+                    top.push(object.aCoords.tl.y)
+                    return object.set("active", true);
+                });
+
+                let minLeft = left.reduce((a, b) => {
+                    return Math.min(a,b);
+                })
+                let minTop = top.reduce((a,b) => {
+                    return Math.min(a,b);
+                })
+
+                let group = new fabric.Group(toGroup, {
+                    left: minLeft,
+                    top: minTop
+                });
+                canvas.activeObject = null;
+
+                canvas.add(group);
+                toGroup.forEach(obj => {
+                    return canvas.remove(obj)
+                })
+            }
         });
         $(".send-front").off().click(() => {
             canvas.bringForward(activeObject);
