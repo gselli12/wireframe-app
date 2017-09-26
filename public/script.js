@@ -4,7 +4,22 @@ var rect, circle, image, text, inputfield, button, group, heading, id;
 const bordercolor = "black";
 const backgroundcolor = "white";
 const strokeWidth = 2;
-const fontFamily = "'Patrick Hand SC', cursive"
+const fontFamily = "'Patrick Hand SC', cursive";
+
+//console.log(window.location);
+if(window.location.pathname != "/") {
+    console.log("not home");
+    $.ajax({
+        url: window.location.origin + "/api" + window.location.pathname,
+        success: (data) => {
+            let wireframeObject = data[0].wireframe_object;
+            canvas.loadFromJSON(wireframeObject);
+        }
+    });
+} else {
+    console.log("home");
+
+}
 
 $(".create-rect").on("click", () => {
     rect = new fabric.Rect({
@@ -286,18 +301,24 @@ canvas.on('object:selected', function(e) {
 
 //SAVING
 $("#save-button").click(function(){
-    let json = JSON.stringify(canvas.toJSON());
-    console.log(json);
+    let json = JSON.stringify(canvas);
     if(!id) {
         id = makeid();
     }
+    console.log(json);
 
     $.ajax({
         url: '/api/' + id,
         method: 'POST',
         contentType: "application/json",
         dataType:'json',
-        data: json
+        data: json,
+        success: (data) => {
+            console.log(data);
+        },
+        error: (err) => {
+            console.log(err);
+        }
     });
 });
 
