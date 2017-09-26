@@ -4,6 +4,11 @@ body {
     overflow-x: hidden;
 }
 
+header {
+    display: flex;
+    flex-direction: row;
+}
+
 .wireframe {
     margin-top: 50px;
     margin-left: 100px;
@@ -86,4 +91,39 @@ body {
 
 .copy:hover, .paste:hover, .cut:hover, .send-very-front:hover, .send-very-back:hover, .send-front:hover, .send-back:hover {
     background-color: #6db6f9;
+}
+
+.div-save {
+    max-width: 500px;
+    margin-right: 0;
+}
+
+@keyframes appear {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.highlight {
+    color: red;
+}
+
+.canvas-saved {
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    opacity: 0;
+    flex-direction: row;
+    animation-name: appear;
+    animation-duration: 10s;
+}
+
+.hidden {
+    display: none;
 }

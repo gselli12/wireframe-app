@@ -1,24 +1,29 @@
 let canvas = new fabric.Canvas("canvas");
 let wireframe = $(".wireframe");
-var rect, circle, image, text, inputfield, button, group, heading, id;
+var rect, circle, image, text, inputfield, button, group, heading, urlString;
 const bordercolor = "black";
 const backgroundcolor = "white";
 const strokeWidth = 2;
 const fontFamily = "'Patrick Hand SC', cursive";
 
-//console.log(window.location);
+console.log(window.location);
+
+//IF USER WANTS TO ACCESS SAVED CANVAS, LOAD IT
 if(window.location.pathname != "/") {
-    console.log("not home");
     $.ajax({
         url: window.location.origin + "/api" + window.location.pathname,
         success: (data) => {
+            urlString = data[0].url_string;
             let wireframeObject = data[0].wireframe_object;
             canvas.loadFromJSON(wireframeObject);
+        },
+        error: err => {
+            if(err.status == 404) {
+                window.location.href = "./404";
+                return;
+            }
         }
     });
-} else {
-    console.log("home");
-
 }
 
 $(".create-rect").on("click", () => {
@@ -171,12 +176,10 @@ let onKeyDownHandler = (e) => {
             Object.keys(activeObject._objects).forEach(object => {
                 copiedObjects.push(activeObject._objects[object]);
             });
-            console.log("copied", copiedObjects);
             return;
         }
 
         copiedObjects.push(activeObject);
-        console.log("copied", copiedObjects);
     }
 
     //PASTE OBJ ON CTRL + V
@@ -302,19 +305,24 @@ canvas.on('object:selected', function(e) {
 //SAVING
 $("#save-button").click(function(){
     let json = JSON.stringify(canvas);
-    if(!id) {
-        id = makeid();
+    if(!urlString) {
+        urlString = makeid();
     }
-    console.log(json);
 
     $.ajax({
-        url: '/api/' + id,
+        url: '/api/' + urlString,
         method: 'POST',
         contentType: "application/json",
         dataType:'json',
         data: json,
         success: (data) => {
-            console.log(data);
+            console.log("saved");
+            window.history.pushState("", "", "/" + urlString);
+            $(".canvas-saved").html("Canvas saved as <div class='highlight'>" + window.location.origin + "/" + urlString + "</div>");
+            $(".canvas-saved").removeClass("hidden");
+            setTimeout(() => {
+                $(".canvas-saved").addClass("hidden");
+            }, 10000);
         },
         error: (err) => {
             console.log(err);
@@ -326,7 +334,7 @@ function makeid() {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for (var i = 0; i < 7; i++)
+    for (var i = 0; i < 5; i++)
         text += possible.charAt(Math.floor(Math.random() * possible.length));
 
     return text;
