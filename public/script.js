@@ -1,6 +1,6 @@
 let canvas = new fabric.Canvas("canvas");
 let wireframe = $(".wireframe");
-var rect, circle, image, text, inputfield, button, group, heading, urlString;
+var urlString;
 const bordercolor = "black";
 var backgroundcolor = "#ffffff";
 let fillcolor = "#ffffff";
@@ -18,7 +18,7 @@ if(window.location.pathname != "/") {
             backgroundcolor = data[0].background_color;
             fillcolor = data[0].fill_color;
             fontcolor = data[0].font_color;
-            $("#canvas").css("background-color", backgroundcolor)
+            $("#canvas").css("background-color", backgroundcolor);
             canvas.loadFromJSON(JSON.parse(wireframeObject));
         },
         error: err => {
@@ -38,11 +38,11 @@ let createRect = (left = 50, top = 50, width = 200, height = 50) => {
         fill: fillcolor,
         width,
         height,
-        strokeWidth: strokeWidth,
+        strokeWidth,
         stroke: bordercolor,
     });
     return canvas.add(rect);
-}
+};
 
 let createCircle = (left = 100, top = 100, radius = 50) => {
     circle = new fabric.Circle({
@@ -96,7 +96,7 @@ let createText = (left = 50, top = 50, width = 200, height = 30) => {
     text = new fabric.Textbox(textDefault, txtBoxConfig);
 
     canvas.add(text);
-}
+};
 
 let createHeading = (left = 50, top = 50, width = 200, height = 60) => {
     var textDefault = "Your Heading";
@@ -116,7 +116,7 @@ let createHeading = (left = 50, top = 50, width = 200, height = 60) => {
 
     text = new fabric.Textbox(textDefault, txtBoxConfig);
     canvas.add(text);
-}
+};
 
 let createInputField = (left = 50, top = 50, width = 130, height = 30) => {
     let text = new fabric.Text("|" ,{
@@ -140,7 +140,7 @@ let createInputField = (left = 50, top = 50, width = 130, height = 30) => {
 
     var group = new fabric.Group([box, text]);
     canvas.add(group);
-}
+};
 
 let createButton = (left = 50, top = 50, width = 70, height = 30) => {
     button = new fabric.Rect({
@@ -233,6 +233,7 @@ let onKeyDownHandler = (e) => {
         $(".element-y").html("y: 0");
         $(".element-height").html("height: 0");
         $(".element-width").html("width: 0");
+        $(".adding-new-element").remove();
         return;
     }
 
@@ -262,7 +263,7 @@ let onKeyDownHandler = (e) => {
     //CUT OBJ ON CTRL + X
     else if(ctrl && e.keyCode == 88) {
         copiedObjects = [];
-        activeObject = canvas.getActiveObject()
+        activeObject = canvas.getActiveObject();
         copiedObjects.push(activeObject);
         canvas.remove(activeObject);
         return;
@@ -333,23 +334,23 @@ let mouseDownHandler = (e) => {
             $(".context-menu").remove();
             canvas.remove(activeObject);
         });
-        $(".group").off().click((e) => {
+        $(".group").off().click(() => {
             var objs = canvas.getActiveObjects();
             if(objs.length > 1) {
                 let left = [];
                 let top = [];
                 let toGroup = objs.map(object => {
                     left.push(object.aCoords.tl.x);
-                    top.push(object.aCoords.tl.y)
+                    top.push(object.aCoords.tl.y);
                     return object.set("active", true);
                 });
 
                 let minLeft = left.reduce((a, b) => {
                     return Math.min(a,b);
-                })
+                });
                 let minTop = top.reduce((a,b) => {
                     return Math.min(a,b);
-                })
+                });
 
                 let group = new fabric.Group(toGroup, {
                     left: minLeft,
@@ -359,8 +360,8 @@ let mouseDownHandler = (e) => {
 
                 canvas.add(group);
                 toGroup.forEach(obj => {
-                    return canvas.remove(obj)
-                })
+                    return canvas.remove(obj);
+                });
             }
         });
         $(".ungroup").off().click(() => {
@@ -384,7 +385,7 @@ let mouseDownHandler = (e) => {
             activeObject.set("fill", this.value);
             canvas.renderAll();
             $(".context-menu").remove();
-        })
+        });
         $(".send-front").off().click(() => {
             canvas.bringForward(activeObject);
         });
@@ -446,7 +447,7 @@ $("#save-button").click(function(){
         method: 'POST',
         contentType: "application/json",
         data: send,
-        success: (data) => {
+        success: () => {
             window.history.pushState("", "", "/" + urlString);
             $(".canvas-saved").html("Canvas saved as <div class='highlight'>" + window.location.origin + "/" + urlString + "</div>");
             $(".canvas-saved").removeClass("hidden");
@@ -514,12 +515,18 @@ $(".layout-settings input:checkbox").change(function() {
     if($("#phone-layout").is(":checked")){
         $("#canvas").width("375");
         $("#canvas").height("667");
+        $(".wireframe").width("375");
+        $(".wireframe").height("667");
     } else if ($("#tablet-layout").is(":checked")){
         $("#canvas").width("614");
         $("#canvas").height("756");
+        $(".wireframe").width("614");
+        $(".wireframe").height("756");
     } else {
         $("#canvas").width("1024");
         $("#canvas").height("600");
+        $(".wireframe").width("1024");
+        $(".wireframe").height("600");
     }
 });
 

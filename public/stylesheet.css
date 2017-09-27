@@ -16,10 +16,106 @@ header {
     height: 600px;
 }
 
+.browser-overlay {
+
+}
+
+.laptop {
+    height: 30px;
+    width: 1024px;
+    background-color: grey;
+    position: absolute;
+    z-index: 10;
+    margin-left: 100px;
+    /*margin-top: 20px;*/
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.phone-top {
+    height: 50px;
+    margin-top: -20px;
+    margin-left: 87.5px;
+    width: 401px;
+    background-color: black;
+    position: absolute;
+    z-index: 10;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.phone-right {
+    height: 667px;
+    width: 12.5px;
+    margin-top: 30px;
+    margin-left: 476px;
+    z-index: 10;
+    background-color: black;
+    position: absolute;
+}
+
+.phone-left {
+    height: 667px;
+    width: 12.5px;
+    margin-top: 30px;
+    margin-left: 87.5px;
+    z-index: 10;
+    background-color: black;
+    position: absolute;
+}
+
+.phone-bottom {
+    height: 70px;
+    margin-top: 697px;
+    margin-left: 87.5px;
+    width: 401px;
+    background-color: black;
+    position: absolute;
+    z-index: 10;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.tablet-top {
+    height: 50px;
+    margin-top: -20px;
+    margin-left: 87.5px;
+    width: 629px;
+    background-color: black;
+    position: absolute;
+    z-index: 10;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.buttons {
+    margin-top: 7.5px;
+    display: flex;
+    flex-direction: row;
+}
+
+.button {
+    height: 15px;
+    width: 15px;
+    border-radius: 10px;
+    background-color: white;
+    margin-left: 5px;
+}
+
+.browser-bar {
+    height: 15px;
+    width: 500px;
+    border-radius: 3px;
+    background-color: white;
+    margin-left: 30px;
+}
+
 #canvas {
     background-color: white;
-    border-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
     margin: 0;
+    margin-top: 30px;
     background-size: 20px 20px;
     background-image: linear-gradient(to right, rgb(234, 236, 239) 0.5px, transparent 1px), linear-gradient(to bottom, rgb(234, 236, 239) 0.5px, transparent 1px);
 }
@@ -30,7 +126,7 @@ header {
 }
 
 .footer-elem {
-    margin-top: 10px;
+    margin-top: 40px;
     margin-left: 20px;
 }
 

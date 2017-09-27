@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
 app.post("/api/:string", (req, res) => {
 
     let adr = req.headers.referer;
-    var q = url.parse(adr, true)
+    var q = url.parse(adr, true);
 
     let urlString = req.params.string;
     let wireframe =  JSON.stringify(req.body[0]);
