@@ -344,6 +344,7 @@ canvas.on('object:selected', function(e) {
 
 });
 
+
 //SAVING
 $("#save-button").click(function(){
     let json = JSON.stringify(canvas);
@@ -382,6 +383,7 @@ function makeid() {
     return text;
 }
 
+
 //SETTINGS SECTION
 $("#settings-button").on("click", () => {
     $(".settings-layover").addClass("visible");
@@ -399,8 +401,8 @@ $(".close-button").on("click", () => {
 });
 
 //SETTINGS OPTIONS
-$("input:checkbox").change( function() {
-    $('input[type="checkbox"]').not(this).prop('checked', false);
+$(".view-settings input:checkbox").change( function() {
+    $('.view-settings input[type="checkbox"]').not(this).prop('checked', false);
 
     if($("#view-grid").is(":checked")){
         $("#canvas").css("background-image", 'linear-gradient(to right, rgb(234, 236, 239) 0.5px, transparent 1px), linear-gradient(to bottom, rgb(234, 236, 239) 0.5px, transparent 1px)');
@@ -416,7 +418,21 @@ $("input:checkbox").change( function() {
         $("#canvas").css("background-image", "none");
         $("#grid-size").css("display", "none");
     }
+});
 
+$(".layout-settings input:checkbox").change(function() {
+    $('.layout-settings input[type="checkbox"]').not(this).prop('checked', false);
+
+    if($("#phone-layout").is(":checked")){
+        $("#canvas").width("375");
+        $("#canvas").height("667");
+    } else if ($("#tablet-layout").is(":checked")){
+        $("#canvas").width("614");
+        $("#canvas").height("756");
+    } else {
+        $("#canvas").width("1024");
+        $("#canvas").height("600");
+    }
 });
 
 $("#grid-size").on("change", () => {
