@@ -26,14 +26,16 @@ app.post("/api/:string", (req, res) => {
 
     let adr = req.headers.referer;
     var q = url.parse(adr, true)
-    console.log(q.pathname);
 
     let urlString = req.params.string;
-    let wireframe =  JSON.stringify(req.body);
+    let wireframe =  JSON.stringify(req.body[0]);
+    let backgroundcolor = req.body[1];
+    let fontcolor = req.body[2];
+    let fillcolor = req.body[3];
 
     if(q.pathname == "/") {
         console.log("new");
-        db.query(`INSERT INTO wireframes (url_string, wireframe_object) VALUES ($1, $2)`, [urlString, wireframe], (err, results) => {
+        db.query(`INSERT INTO wireframes (url_string, wireframe_object, background_color, fill_color, font_color) VALUES ($1, $2, $3, $4, $5)`, [urlString, wireframe, backgroundcolor, fillcolor, fontcolor], (err, results) => {
             if(err) {
                 console.log(err);
             } else {
@@ -42,7 +44,7 @@ app.post("/api/:string", (req, res) => {
         });
     } else {
         console.log("not new", urlString);
-        db.query(`UPDATE wireframes SET wireframe_object = ($2) WHERE url_string = ($1);`, [urlString, wireframe], (err, results) => {
+        db.query(`UPDATE wireframes SET wireframe_object = ($2) background_color = ($3), fill_color = ($4), font_color = ($5) WHERE url_string = ($1);`, [urlString, wireframe, backgroundcolor, fillcolor, fontcolor], (err, results) => {
             if(err) {
                 console.log(err);
             } else {

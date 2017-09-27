@@ -3,6 +3,7 @@ let wireframe = $(".wireframe");
 var rect, circle, image, text, inputfield, button, group, heading, urlString;
 const bordercolor = "black";
 var backgroundcolor = "#ffffff";
+let fillcolor = "#ffffff";
 var fontcolor = "#000000";
 const strokeWidth = 1;
 const fontFamily = "'Patrick Hand SC', cursive";
@@ -14,7 +15,11 @@ if(window.location.pathname != "/") {
         success: (data) => {
             urlString = data[0].url_string;
             let wireframeObject = data[0].wireframe_object;
-            canvas.loadFromJSON(wireframeObject);
+            backgroundcolor = data[0].background_color;
+            fillcolor = data[0].fill_color;
+            fontcolor = data[0].font_color;
+            $("#canvas").css("background-color", backgroundcolor)
+            canvas.loadFromJSON(JSON.parse(wireframeObject));
         },
         error: err => {
             if(err.status == 404) {
@@ -30,7 +35,7 @@ let createRect = (left = 50, top = 50, width = 200, height = 50) => {
     rect = new fabric.Rect({
         left,
         top,
-        fill: backgroundcolor,
+        fill: fillcolor,
         width,
         height,
         strokeWidth: strokeWidth,
@@ -42,7 +47,7 @@ let createRect = (left = 50, top = 50, width = 200, height = 50) => {
 let createCircle = (left = 100, top = 100, radius = 50) => {
     circle = new fabric.Circle({
         radius,
-        fill: backgroundcolor,
+        fill: fillcolor,
         left,
         top,
         strokeWidth,
@@ -71,8 +76,8 @@ let createImage = (left = 50, top = 50, width = 200, height = 70) => {
     canvas.add(group);
 };
 
-let createText = (left = 50, top = 50, width = 200, height = 60) => {
-    var textDefault = "Your text"
+let createText = (left = 50, top = 50, width = 200, height = 30) => {
+    var textDefault = "Your text "
     var txtBoxConfig = {
         left,
         top,
@@ -81,13 +86,15 @@ let createText = (left = 50, top = 50, width = 200, height = 60) => {
         textAlign: 'left',
         width,
         height,
-        backgroundColor: backgroundcolor,
+        backgroundColor: fillcolor,
         shadow: new fabric.Shadow( { color: 'rgba(0,0,0,0.3)', offsetX: 0.05, offsetY: 0.05 }),
         borderColor: bordercolor,
         fill: fontcolor
     };
 
+
     text = new fabric.Textbox(textDefault, txtBoxConfig);
+
     canvas.add(text);
 }
 
@@ -101,7 +108,7 @@ let createHeading = (left = 50, top = 50, width = 200, height = 60) => {
         textAlign: 'left',
         width,
         height,
-        backgroundColor: backgroundcolor,
+        backgroundColor: fillcolor,
         shadow: new fabric.Shadow( { color: 'rgba(0,0,0,0.3)', offsetX: 0.05, offsetY: 0.05 }),
         borderColor: bordercolor,
         fill: fontcolor
@@ -152,9 +159,32 @@ let createButton = (left = 50, top = 50, width = 70, height = 30) => {
         fontSize: 20,
         textAlign: "left",
     });
-    console.log(text.height);
+
     group = new fabric.Group([button, text]);
     canvas.add(group);
+};
+
+let createGhost = (left, top, width, height) => {
+    ghostRect = new fabric.Rect({
+        id: 1,
+        left,
+        top,
+        fill: "rgba(172, 136, 241, 0.4)",
+        width,
+        height,
+        strokeWidth: strokeWidth,
+        stroke: bordercolor,
+    });
+    return canvas.add(ghostRect);
+};
+
+let removeGhost = () => {
+    let objects = canvas.getObjects();
+    objects.forEach(object => {
+        if (object.id == 1) {
+            canvas.remove(object);
+        }
+    });
 };
 
 //CREATING DEFAULT ELEMENTS ON BUTTON
@@ -407,14 +437,16 @@ $("#save-button").click(function(){
         urlString = makeid();
     }
 
+
+    let data = [json, backgroundcolor, fontcolor, fillcolor];
+    let send = JSON.stringify(data);
+
     $.ajax({
         url: '/api/' + urlString,
         method: 'POST',
         contentType: "application/json",
-        dataType:'json',
-        data: json,
+        data: send,
         success: (data) => {
-            console.log("saved");
             window.history.pushState("", "", "/" + urlString);
             $(".canvas-saved").html("Canvas saved as <div class='highlight'>" + window.location.origin + "/" + urlString + "</div>");
             $(".canvas-saved").removeClass("hidden");
@@ -506,51 +538,57 @@ $("#colorpicker").spectrum({
     allowEmpty:true
 });
 
-$("#backgoundcolorpicker").spectrum({
+$("#backgroundcolorpicker").spectrum({
     preferredFormat: "hex",
-    color: "#ffffff",
+    color: backgroundcolor,
     showInput: true
 });
 
-$("#backgoundcolorpicker").change(function() {
-    $("#canvas").css("background-color", this.value);
-});
-
-$("#colorpicker").change(function() {
+$("#backgroundcolorpicker").change(function() {
     backgroundcolor = this.value;
+    $("#canvas").css("background-color", backgroundcolor);
 });
 
 $(".font-color").change(function() {
     fontcolor = this.value;
 });
 
+$("#colorpicker").change(function() {
+    fillcolor = this.value;
+});
+
+
+
 //ADDING ELEMENTS ON MOUSEDRAG
 var isDragging = false;
 $(".wireframe").off("mousedown").mousedown((e) => {
-    console.log("mousedown");
     isDragging = false;
     let initialX = e.pageX;
     let initialY = e.pageY;
 
-    $(".wireframe").off("mousemove").mousemove((e) => {
-        console.log("mousemove");
+    $(".wireframe").mousemove(() => {
         isDragging = true;
-
     });
     $(".wireframe").off("mouseup").mouseup((evt) => {
-        $(".wireframe").off("mousemove")
         var wasDragging = isDragging;
         isDragging = false;
+        let activeObject = canvas.getActiveObject();
         var finalX = evt.pageX;
         var finalY = evt.pageY;
-        if(wasDragging) {
+        let left = initialX - $(".wireframe").offset().left;
+        let top = initialY - $(".wireframe").offset().top;
+        let width = Math.abs(initialX - finalX);
+        let height = Math.abs(initialY - finalY);
 
-            $("body").append(() => {
-                return "<div class='adding-new-element'></div>"
-            })
+        if(wasDragging && width > 30 && height > 30 && !activeObject) {
+
+            $("body").append("<div class='adding-new-element'></div>");
 
             $(".adding-new-element").css("left", initialX - (initialX - finalX));
             $(".adding-new-element").css("top", initialY - (initialY - finalY));
+
+            createGhost(left, top, width, height);
+
 
             $(".adding-new-element").html(`
                 <button class="create-rect-page">Rectangle</button>
@@ -560,51 +598,50 @@ $(".wireframe").off("mousedown").mousedown((e) => {
                 <button class="create-heading-page">Heading</button>
                 <button class="create-inputfield-page">Inputfield</button>
                 <button class="create-button-page">Button</button>
+                <img src="close.png" class="img close-new-elem" />
                 `);
 
-            let left = initialX - $(".wireframe").offset().left;
-            let top = initialY - $(".wireframe").offset().top;
-            let width = Math.abs(initialX - finalX);
-            let height = Math.abs(initialY - finalY);
 
             $(".create-rect-page").click(() => {
-
                 createRect(left, top, width, height);
-
                 $(".adding-new-element").remove();
-                // initialX = null;
-                // initialY = null;
-                // finalX = null;
-                // finalY = null;
+                removeGhost();
             });
 
             $(".create-circ-page").click(() => {
                 createCircle(left, top, width/2);
                 $(".adding-new-element").remove();
+                removeGhost();
             });
             $(".create-img-page").click(() => {
                 createImage(left, top, width, height);
                 $(".adding-new-element").remove();
+                removeGhost();
             });
             $(".create-text-page").click(() => {
                 createText(left, top, width, height);
                 $(".adding-new-element").remove();
+                removeGhost();
             });
             $(".create-heading-page").click(() => {
                 createHeading(left, top, width, height);
                 $(".adding-new-element").remove();
+                removeGhost();
             });
             $(".create-inputfield-page").click(() => {
                 createInputField(left, top, width, height);
                 $(".adding-new-element").remove();
+                removeGhost();
             });
             $(".create-button-page").click(() => {
                 createButton(left, top, width, height);
                 $(".adding-new-element").remove();
+                removeGhost();
             });
-            $("document").click(() => {
-
-            })
+            $(".close-new-elem").click(() => {
+                $(".adding-new-element").remove();
+                removeGhost();
+            });
 
         }
     });
