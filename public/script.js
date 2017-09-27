@@ -7,8 +7,6 @@ var fontcolor = "#000000";
 const strokeWidth = 2;
 const fontFamily = "'Patrick Hand SC', cursive";
 
-console.log(window.location);
-
 //IF USER WANTS TO ACCESS SAVED CANVAS, LOAD IT
 if(window.location.pathname != "/") {
     $.ajax({
@@ -239,6 +237,9 @@ let mouseDownHandler = (e) => {
             <div class="paste">Paste</div>
             <div class = "group">Group</div>
             <div class="ungroup">Ungroup</div>
+            <div class="change-color">Change Color
+                <input id='individual-color-picker'/>
+            </div>
             <div class="send-front">Bring one layer up</div>
             <div class="send-very-front">Bring to front</div>
             <div class="send-back">Send one layer back</div>
@@ -303,6 +304,17 @@ let mouseDownHandler = (e) => {
 
             canvas.remove(activeGroup);
         });
+        $("#individual-color-picker").spectrum({
+            preferredFormat: "hex",
+            color: "#ffffff",
+            showInput: true
+        });
+        $("#individual-color-picker").change(function() {
+            let activeObject = canvas.getActiveObject();
+            activeObject.set("fill", this.value);
+            canvas.renderAll();
+            $(".context-menu").remove();
+        })
         $(".send-front").off().click(() => {
             canvas.bringForward(activeObject);
         });
