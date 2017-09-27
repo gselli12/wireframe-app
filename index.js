@@ -46,7 +46,6 @@ app.post("/api/:string", (req, res) => {
             if(err) {
                 console.log(err);
             } else {
-                console.log(results);
                 return results;
             }
         });

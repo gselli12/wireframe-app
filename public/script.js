@@ -4,7 +4,7 @@ var rect, circle, image, text, inputfield, button, group, heading, urlString;
 const bordercolor = "black";
 var backgroundcolor = "#ffffff";
 var fontcolor = "#000000";
-const strokeWidth = 2;
+const strokeWidth = 1;
 const fontFamily = "'Patrick Hand SC', cursive";
 
 //IF USER WANTS TO ACCESS SAVED CANVAS, LOAD IT
@@ -25,52 +25,62 @@ if(window.location.pathname != "/") {
     });
 }
 
-$(".create-rect").on("click", () => {
+//CREATORFUNCTIONS
+let createRect = (left = 50, top = 50, width = 200, height = 50) => {
     rect = new fabric.Rect({
-        left: 50,
-        top: 50,
+        left,
+        top,
         fill: backgroundcolor,
-        width: 200,
-        height: 50,
-        strokeWidth: 2,
+        width,
+        height,
+        strokeWidth: strokeWidth,
         stroke: bordercolor,
-
     });
-    canvas.add(rect);
-});
+    return canvas.add(rect);
+}
 
-$(".create-circle").on("click", () => {
+let createCircle = (left = 100, top = 100, radius = 50) => {
     circle = new fabric.Circle({
-        radius: 50,
+        radius,
         fill: backgroundcolor,
-        left: 100,
-        top: 100,
+        left,
+        top,
         strokeWidth,
         stroke: bordercolor
     });
-    canvas.add(circle);
-});
+    return canvas.add(circle);
+};
 
-$(".create-image").on("click", () => {
+let createImage = (left = 50, top = 50, width = 200, height = 70) => {
     image = new fabric.Rect({
-        left: 50,
-        top: 50,
-        fill: 'grey',
-        width: 200,
-        height: 70,
+        left,
+        top,
+        fill: 'white',
+        width,
+        height,
+        stroke: "black",
         strokeWidth
     });
-    canvas.add(image);
-});
+    let line1 = new fabric.Line([left, top, width + left, top + height], {
+        stroke: "black",
+    });
+    let line2 = new fabric.Line([left, top + height, width + left, top], {
+        stroke: "black"
+    });
+    let group = new fabric.Group([image, line1, line2]);
+    canvas.add(group);
+};
 
-$(".create-text").on("click", () => {
+let createText = (left = 50, top = 50, width = 200, height = 60) => {
     var textDefault = "Your text"
     var txtBoxConfig = {
+        left,
+        top,
         fontSize: 24,
         fontFamily,
         textAlign: 'left',
-        width: 200,
-        height: 60,
+        width,
+        height,
         backgroundColor: backgroundcolor,
         shadow: new fabric.Shadow( { color: 'rgba(0,0,0,0.3)', offsetX: 0.05, offsetY: 0.05 }),
         borderColor: bordercolor,
@@ -79,48 +89,43 @@ $(".create-text").on("click", () => {
 
     text = new fabric.Textbox(textDefault, txtBoxConfig);
     canvas.add(text);
-});
+}
 
-$(".create-heading").on("click", () => {
+let createHeading = (left = 50, top = 50, width = 200, height = 60) => {
     var textDefault = "Your Heading";
     var txtBoxConfig = {
+        left,
+        top,
         fontSize: 32,
         fontFamily,
         textAlign: 'left',
-        width: 200,
-        height: 60,
+        width,
+        height,
         backgroundColor: backgroundcolor,
         shadow: new fabric.Shadow( { color: 'rgba(0,0,0,0.3)', offsetX: 0.05, offsetY: 0.05 }),
         borderColor: bordercolor,
         fill: fontcolor
     };
 
-    heading = new fabric.Text("heading", {
-        fontSize: 32,
-        fontFamily,
-        left: 50,
-        right: 50
-    });
-
     text = new fabric.Textbox(textDefault, txtBoxConfig);
     canvas.add(text);
-});
+}
 
-$(".create-inputfield").on("click", () => {
+let createInputField = (left = 50, top = 50, width = 130, height = 30) => {
     let text = new fabric.Text("|" ,{
-        left: 60,
-        top: 52,
+        left: left + 10,
+        top: top + 2,
         fontFamily,
         fontSize: 20,
         textAlign: "center",
     });
 
     var box = new fabric.Rect({
-        left: 50,
-        top: 50,
+        left,
+        top,
         fill: "white",
-        width: 100,
-        height: 30,
+        width,
+        height,
         strokeWidth,
         ry: 10,
         stroke: bordercolor,
@@ -128,27 +133,56 @@ $(".create-inputfield").on("click", () => {
 
     var group = new fabric.Group([box, text]);
     canvas.add(group);
-});
+}
 
-$(".create-button").on("click", () => {
+let createButton = (left = 50, top = 50, width = 70, height = 30) => {
     button = new fabric.Rect({
-        left: 50,
-        top: 50,
+        left,
+        top,
         fill: "rgb(209, 210, 211)",
-        width: 70,
-        height: 30,
+        width,
+        height,
         strokeWidth,
         ry: 10,
     });
     text = new fabric.Text("button", {
-        left: 60,
-        top: 52,
+        left: left + 10,
+        top: top + 2,
         fontFamily,
         fontSize: 20,
         textAlign: "center",
     });
     group = new fabric.Group([button, text]);
     canvas.add(group);
+}
+
+//CREATING DEFAULT ELEMENTS ON BUTTON
+$(".create-rect").on("click", function() {
+    createRect();
+});
+
+$(".create-circle").on("click", () => {
+    createCircle();
+});
+
+$(".create-image").on("click", () => {
+    createImage();
+});
+
+$(".create-text").on("click", () => {
+    createText();
+});
+
+$(".create-heading").on("click", () => {
+    createHeading();
+});
+
+$(".create-inputfield").on("click", () => {
+    createInputField();
+});
+
+$(".create-button").on("click", () => {
+    createButton();
 });
 
 
@@ -163,6 +197,10 @@ let onKeyDownHandler = (e) => {
     if(e.keyCode == 46) {
         let activeObject = canvas.getActiveObject();
         canvas.remove(activeObject);
+        $(".element-x").html("x: 0");
+        $(".element-y").html("y: 0");
+        $(".element-height").html("height: 0");
+        $(".element-width").html("width: 0");
         return;
     }
 
@@ -230,7 +268,7 @@ let mouseDownHandler = (e) => {
 
     if(activeObject) {
         e.preventDefault();
-        $("body ").append((e) => {
+        $("body ").append(() => {
             return `<div class='context-menu'>
             <div class="copy">Copy</div>
             <div class="cut">Cut</div>
@@ -415,7 +453,7 @@ $(".close-button").on("click", () => {
     $(".settings").removeClass("visible");
 });
 
-//SETTINGS OPTIONS
+//VIEW SETTINGS
 $(".view-settings input:checkbox").change( function() {
     $('.view-settings input[type="checkbox"]').not(this).prop('checked', false);
 
@@ -435,6 +473,7 @@ $(".view-settings input:checkbox").change( function() {
     }
 });
 
+//LAYOUT SETTINGS
 $(".layout-settings input:checkbox").change(function() {
     $('.layout-settings input[type="checkbox"]').not(this).prop('checked', false);
 
@@ -457,6 +496,7 @@ $("#grid-size").on("change", () => {
     $("#canvas").css("background-size", prop);
 });
 
+//STYLING SETTINGS
 $("#colorpicker").spectrum({
     preferredFormat: "hex",
     color: "#ffffff",
@@ -482,18 +522,70 @@ $(".font-color").change(function() {
     fontcolor = this.value;
 });
 
-// var isDragging;
-// $("body").mousedown((e) => {
-//     isDragging = false;
-//     $("body").mousemove((e) => {
-//         isDragging = true;
-//console.log(e.pageX, e.pageY);
-//
-//     });
-//     $("body").mouseup(() => {
-//         $("body").off("mousemove");
-//     });
-// });
+var isDragging = false;
+$(".wireframe").off("mousedown").mousedown((e) => {
+    console.log("mousedown");
+    isDragging = false;
+    let initialX = e.pageX;
+    let initialY = e.pageY;
+
+    $(".wireframe").off("mousemove").mousemove((e) => {
+        console.log("mousemove");
+        isDragging = true;
+
+    });
+    $(".wireframe").off("mouseup").mouseup((evt) => {
+        $(".wireframe").off("mousemove")
+        console.log("mouseup");
+        var wasDragging = isDragging;
+        isDragging = false;
+        var finalX = evt.pageX;
+        var finalY = evt.pageY;
+        if(wasDragging) {
+
+            $("body").append(() => {
+                return "<div class='adding-new-element'></div>"
+            })
+            console.log( "x", initialX, finalX);
+            console.log("y", initialY, finalY);
+            $(".adding-new-element").css("left", initialX - (initialX - finalX));
+            $(".adding-new-element").css("top", initialY - (initialY - finalY));
+            // console.log($(".adding-new-element").css("left"));
+            // console.log($(".adding-new-element").css("top"));
+            $(".adding-new-element").html(`
+                <button class="create-rect-page">Rectangle</button>
+                <button>Circle</button>
+                <button>Image</button>
+                <button>Text</button>
+                <button>Heading</button>
+                <button>Inputfield</button>
+                <button>Button</button>
+                `);
+
+            $(".create-rect-page").click(() => {
+                rect = new fabric.Rect({
+                    left: 50,
+                    top: 50,
+                    fill: backgroundcolor,
+                    width: Math.abs(initialX - finalX),
+                    height: Math.abs(initialY - finalY),
+                    strokeWidth: strokeWidth,
+                    stroke: bordercolor,
+                });
+                console.log("width", Math.abs(initialX - finalX));
+                console.log("height", Math.abs(initialY - finalY));
+                canvas.add(rect);
+
+                initialX = null;
+                initialY = null;
+                finalX = null;
+                finalY = null;
+            })
+
+        }
+
+    });
+});
 
 document.oncontextmenu = mouseDownHandler;
 document.onkeydown = onKeyDownHandler;
