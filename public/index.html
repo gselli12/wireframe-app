@@ -6,6 +6,7 @@
         <title>Wireframe App</title>
         <script src="fabric.js"> </script>
 
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
     </head>
     <body>
         <header>
@@ -28,6 +29,7 @@
 
         <div class="settings-layover">
 
+
         </div>
         <div class="settings">
             <div class="view-settings">
@@ -44,6 +46,23 @@
                 </label>
                 <label for="none">
                     <input type="checkbox" name="view-column">None
+                </label>
+            </div>
+
+            <div class="styling-settings">
+                <h3>Styling options</h3>
+                <label for="">
+                    Background Color <input id="backgoundcolorpicker"/> <br>
+                </label>
+                <label for="">
+                    Default Fill Color: <input  id="colorpicker"/>
+                </label>
+                <label for="">
+                    <br> Default Font Color:
+                    <select class="font-color" name="">
+                        <option value="#000000">Black</option>
+                        <option value="#ffffff">White</option>
+                    </select>
                 </label>
             </div>
 
@@ -100,6 +119,7 @@
     </body>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
     <script src="script.js"> </script>
     <link href="https://fonts.googleapis.com/css?family=Patrick+Hand+SC" rel="stylesheet">
 

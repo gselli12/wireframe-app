@@ -2,7 +2,8 @@ let canvas = new fabric.Canvas("canvas");
 let wireframe = $(".wireframe");
 var rect, circle, image, text, inputfield, button, group, heading, urlString;
 const bordercolor = "black";
-const backgroundcolor = "white";
+var backgroundcolor = "#ffffff";
+var fontcolor = "#000000";
 const strokeWidth = 2;
 const fontFamily = "'Patrick Hand SC', cursive";
 
@@ -74,7 +75,8 @@ $(".create-text").on("click", () => {
         height: 60,
         backgroundColor: backgroundcolor,
         shadow: new fabric.Shadow( { color: 'rgba(0,0,0,0.3)', offsetX: 0.05, offsetY: 0.05 }),
-        borderColor: bordercolor
+        borderColor: bordercolor,
+        fill: fontcolor
     };
 
     text = new fabric.Textbox(textDefault, txtBoxConfig);
@@ -91,7 +93,8 @@ $(".create-heading").on("click", () => {
         height: 60,
         backgroundColor: backgroundcolor,
         shadow: new fabric.Shadow( { color: 'rgba(0,0,0,0.3)', offsetX: 0.05, offsetY: 0.05 }),
-        borderColor: bordercolor
+        borderColor: bordercolor,
+        fill: fontcolor
     };
 
     heading = new fabric.Text("heading", {
@@ -442,12 +445,37 @@ $("#grid-size").on("change", () => {
     $("#canvas").css("background-size", prop);
 });
 
+$("#colorpicker").spectrum({
+    preferredFormat: "hex",
+    color: "#ffffff",
+    showInput: true,
+    allowEmpty:true
+});
+
+$("#backgoundcolorpicker").spectrum({
+    preferredFormat: "hex",
+    color: "#ffffff",
+    showInput: true
+});
+
+$("#backgoundcolorpicker").change(function() {
+    $("#canvas").css("background-color", this.value);
+});
+
+$("#colorpicker").change(function() {
+    backgroundcolor = this.value;
+});
+
+$(".font-color").change(function() {
+    fontcolor = this.value;
+});
+
 // var isDragging;
 // $("body").mousedown((e) => {
 //     isDragging = false;
 //     $("body").mousemove((e) => {
 //         isDragging = true;
-        //console.log(e.pageX, e.pageY);
+//console.log(e.pageX, e.pageY);
 //
 //     });
 //     $("body").mouseup(() => {
