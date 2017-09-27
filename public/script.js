@@ -146,15 +146,16 @@ let createButton = (left = 50, top = 50, width = 70, height = 30) => {
         ry: 10,
     });
     text = new fabric.Text("button", {
-        left: left + 10,
-        top: top + 2,
+        left: left + width/2 - 26,
+        top: top + height/2 - 11,
         fontFamily,
         fontSize: 20,
-        textAlign: "center",
+        textAlign: "left",
     });
+    console.log(text.height);
     group = new fabric.Group([button, text]);
     canvas.add(group);
-}
+};
 
 //CREATING DEFAULT ELEMENTS ON BUTTON
 $(".create-rect").on("click", function() {
@@ -186,6 +187,7 @@ $(".create-button").on("click", () => {
 });
 
 
+//KEYBOARD SHORTCUTS
 var copiedObjects = [];
 let onKeyDownHandler = (e) => {
     e = e || window.event;
@@ -522,6 +524,7 @@ $(".font-color").change(function() {
     fontcolor = this.value;
 });
 
+//ADDING ELEMENTS ON MOUSEDRAG
 var isDragging = false;
 $(".wireframe").off("mousedown").mousedown((e) => {
     console.log("mousedown");
@@ -536,7 +539,6 @@ $(".wireframe").off("mousedown").mousedown((e) => {
     });
     $(".wireframe").off("mouseup").mouseup((evt) => {
         $(".wireframe").off("mousemove")
-        console.log("mouseup");
         var wasDragging = isDragging;
         isDragging = false;
         var finalX = evt.pageX;
@@ -546,44 +548,65 @@ $(".wireframe").off("mousedown").mousedown((e) => {
             $("body").append(() => {
                 return "<div class='adding-new-element'></div>"
             })
-            console.log( "x", initialX, finalX);
-            console.log("y", initialY, finalY);
+
             $(".adding-new-element").css("left", initialX - (initialX - finalX));
             $(".adding-new-element").css("top", initialY - (initialY - finalY));
-            // console.log($(".adding-new-element").css("left"));
-            // console.log($(".adding-new-element").css("top"));
+
             $(".adding-new-element").html(`
                 <button class="create-rect-page">Rectangle</button>
-                <button>Circle</button>
-                <button>Image</button>
-                <button>Text</button>
-                <button>Heading</button>
-                <button>Inputfield</button>
-                <button>Button</button>
+                <button class="create-circ-page">Circle</button>
+                <button class="create-img-page">Image</button>
+                <button class="create-text-page">Text</button>
+                <button class="create-heading-page">Heading</button>
+                <button class="create-inputfield-page">Inputfield</button>
+                <button class="create-button-page">Button</button>
                 `);
 
-            $(".create-rect-page").click(() => {
-                rect = new fabric.Rect({
-                    left: 50,
-                    top: 50,
-                    fill: backgroundcolor,
-                    width: Math.abs(initialX - finalX),
-                    height: Math.abs(initialY - finalY),
-                    strokeWidth: strokeWidth,
-                    stroke: bordercolor,
-                });
-                console.log("width", Math.abs(initialX - finalX));
-                console.log("height", Math.abs(initialY - finalY));
-                canvas.add(rect);
+            let left = initialX - $(".wireframe").offset().left;
+            let top = initialY - $(".wireframe").offset().top;
+            let width = Math.abs(initialX - finalX);
+            let height = Math.abs(initialY - finalY);
 
-                initialX = null;
-                initialY = null;
-                finalX = null;
-                finalY = null;
+            $(".create-rect-page").click(() => {
+
+                createRect(left, top, width, height);
+
+                $(".adding-new-element").remove();
+                // initialX = null;
+                // initialY = null;
+                // finalX = null;
+                // finalY = null;
+            });
+
+            $(".create-circ-page").click(() => {
+                createCircle(left, top, width/2);
+                $(".adding-new-element").remove();
+            });
+            $(".create-img-page").click(() => {
+                createImage(left, top, width, height);
+                $(".adding-new-element").remove();
+            });
+            $(".create-text-page").click(() => {
+                createText(left, top, width, height);
+                $(".adding-new-element").remove();
+            });
+            $(".create-heading-page").click(() => {
+                createHeading(left, top, width, height);
+                $(".adding-new-element").remove();
+            });
+            $(".create-inputfield-page").click(() => {
+                createInputField(left, top, width, height);
+                $(".adding-new-element").remove();
+            });
+            $(".create-button-page").click(() => {
+                createButton(left, top, width, height);
+                $(".adding-new-element").remove();
+            });
+            $("document").click(() => {
+
             })
 
         }
-
     });
 });
 
