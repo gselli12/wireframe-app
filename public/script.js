@@ -61,7 +61,7 @@ $(".start-new-canvas").click(() => {
 
 //CREATORFUNCTIONS
 let createRect = (left = 50, top = 50, width = 200, height = 50) => {
-    rect = new fabric.Rect({
+    let rect = new fabric.Rect({
         left,
         top,
         fill: fillcolor,
@@ -74,7 +74,7 @@ let createRect = (left = 50, top = 50, width = 200, height = 50) => {
 };
 
 let createCircle = (left = 100, top = 100, radius = 50) => {
-    circle = new fabric.Circle({
+    let circle = new fabric.Circle({
         radius,
         fill: fillcolor,
         left,
@@ -85,8 +85,17 @@ let createCircle = (left = 100, top = 100, radius = 50) => {
     return canvas.add(circle);
 };
 
+let createLine = (left = 50, top = 50, width = 250, height = 50) => {
+    let line = new fabric.Line([left, top, width, height] , {
+        left,
+        top,
+        stroke: bordercolor
+    });
+    return canvas.add(line);
+};
+
 let createImage = (left = 50, top = 50, width = 200, height = 70) => {
-    image = new fabric.Rect({
+    let image = new fabric.Rect({
         left,
         top,
         fill: 'white',
@@ -106,8 +115,8 @@ let createImage = (left = 50, top = 50, width = 200, height = 70) => {
 };
 
 let createText = (left = 50, top = 50, width = 200, height = 30) => {
-    var textDefault = "Your text "
-    var txtBoxConfig = {
+    let textDefault = "Your text "
+    let txtBoxConfig = {
         left,
         top,
         fontSize: 24,
@@ -122,14 +131,14 @@ let createText = (left = 50, top = 50, width = 200, height = 30) => {
     };
 
 
-    text = new fabric.Textbox(textDefault, txtBoxConfig);
+    let text = new fabric.Textbox(textDefault, txtBoxConfig);
 
     canvas.add(text);
 };
 
 let createHeading = (left = 50, top = 50, width = 200, height = 60) => {
-    var textDefault = "Your Heading";
-    var txtBoxConfig = {
+    let textDefault = "Your Heading";
+    let txtBoxConfig = {
         left,
         top,
         fontSize: 32,
@@ -143,7 +152,7 @@ let createHeading = (left = 50, top = 50, width = 200, height = 60) => {
         fill: fontcolor
     };
 
-    text = new fabric.Textbox(textDefault, txtBoxConfig);
+    let text = new fabric.Textbox(textDefault, txtBoxConfig);
     canvas.add(text);
 };
 
@@ -156,7 +165,7 @@ let createInputField = (left = 50, top = 50, width = 130, height = 30) => {
         textAlign: "center",
     });
 
-    var box = new fabric.Rect({
+    let box = new fabric.Rect({
         left,
         top,
         fill: "white",
@@ -167,12 +176,12 @@ let createInputField = (left = 50, top = 50, width = 130, height = 30) => {
         stroke: bordercolor,
     });
 
-    var group = new fabric.Group([box, text]);
+    let group = new fabric.Group([box, text]);
     canvas.add(group);
 };
 
 let createButton = (left = 50, top = 50, width = 70, height = 30) => {
-    button = new fabric.Rect({
+    let button = new fabric.Rect({
         left,
         top,
         fill: "rgb(209, 210, 211)",
@@ -181,7 +190,7 @@ let createButton = (left = 50, top = 50, width = 70, height = 30) => {
         strokeWidth,
         ry: 10,
     });
-    text = new fabric.Text("button", {
+    let text = new fabric.Text("button", {
         left: left + width/2 - 26,
         top: top + height/2 - 11,
         fontFamily,
@@ -189,12 +198,12 @@ let createButton = (left = 50, top = 50, width = 70, height = 30) => {
         textAlign: "left",
     });
 
-    group = new fabric.Group([button, text]);
+    let group = new fabric.Group([button, text]);
     canvas.add(group);
 };
 
 let createGhost = (left, top, width, height) => {
-    ghostRect = new fabric.Rect({
+    let ghostRect = new fabric.Rect({
         id: 1,
         left,
         top,
@@ -223,6 +232,10 @@ $(".create-rect").on("click", function() {
 
 $(".create-circle").on("click", () => {
     createCircle();
+});
+
+$(".create-line").on("click", () => {
+    createLine();
 });
 
 $(".create-image").on("click", () => {
@@ -619,7 +632,7 @@ $(".wireframe").off("mousedown").mousedown((e) => {
         let width = Math.abs(initialX - finalX);
         let height = Math.abs(initialY - finalY);
 
-        if(wasDragging && width > 30 && height > 30 && !activeObject) {
+        if(wasDragging && (width > 30 || height > 30) && !activeObject) {
 
             $("body").append("<div class='adding-new-element'></div>");
 
@@ -632,6 +645,7 @@ $(".wireframe").off("mousedown").mousedown((e) => {
             $(".adding-new-element").html(`
                 <button class="create-rect-page">Rectangle</button>
                 <button class="create-circ-page">Circle</button>
+                <button class="create-line-page">Line</button>
                 <button class="create-img-page">Image</button>
                 <button class="create-text-page">Text</button>
                 <button class="create-heading-page">Heading</button>
@@ -639,7 +653,6 @@ $(".wireframe").off("mousedown").mousedown((e) => {
                 <button class="create-button-page">Button</button>
                 <img src="close.png" class="img close-new-elem" />
                 `);
-
 
             $(".create-rect-page").click(() => {
                 createRect(left, top, width, height);
@@ -649,6 +662,11 @@ $(".wireframe").off("mousedown").mousedown((e) => {
 
             $(".create-circ-page").click(() => {
                 createCircle(left, top, width/2);
+                $(".adding-new-element").remove();
+                removeGhost();
+            });
+            $(".create-line-page").click(() => {
+                width > height ? createLine(left, top, finalX - $(".wireframe").offset().left, top) : createLine(left, top, left, finalY - $(".wireframe").offset().top);
                 $(".adding-new-element").remove();
                 removeGhost();
             });
@@ -681,7 +699,6 @@ $(".wireframe").off("mousedown").mousedown((e) => {
                 $(".adding-new-element").remove();
                 removeGhost();
             });
-
         }
     });
 });
