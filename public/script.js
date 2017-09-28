@@ -134,6 +134,7 @@ let createText = (left = 50, top = 50, width = 200, height = 30) => {
     let text = new fabric.Textbox(textDefault, txtBoxConfig);
 
     canvas.add(text);
+    canvas.setActiveObject(text);
 };
 
 let createHeading = (left = 50, top = 50, width = 200, height = 60) => {
@@ -203,6 +204,7 @@ let createButton = (left = 50, top = 50, width = 70, height = 30) => {
 };
 
 let createGhost = (left, top, width, height) => {
+
     let ghostRect = new fabric.Rect({
         id: 1,
         left,
@@ -213,7 +215,41 @@ let createGhost = (left, top, width, height) => {
         strokeWidth: strokeWidth,
         stroke: bordercolor,
     });
+
     return canvas.add(ghostRect);
+};
+
+let createGhostLines = (left, top, width, height, count) => {
+    let lineX = new fabric.Line([0, top + height/2, $(".wireframe").width(), top + height/2] , {
+        stroke: bordercolor
+    });
+
+    let lineY = new fabric.Line([left + width/2, 0, left + width/2, $(".wireframe").height()], {
+        stroke: bordercolor
+    });
+    let group = new fabric.Group([lineX, lineY], {
+        id: count
+    });
+    return canvas.add(group);
+};
+
+let moveGhostline = (count) => {
+    let objects = canvas.getObjects();
+    objects.forEach(object => {
+        if (object.id == count - 1) {
+            canvas.remove(object);
+        }
+    });
+};
+
+let removeAllGhostlines = () => {
+    let objects = canvas.getObjects();
+    objects.forEach(object => {
+        if (object.id) {
+            canvas.remove(object);
+            console.log("removed", object);
+        }
+    });
 };
 
 let removeGhost = () => {
@@ -459,11 +495,24 @@ canvas.on('object:selected', function(e) {
     $(".element-y").html("y: " + Math.round(e.target.top));
     $(".element-height").html("height: " + Math.round(e.target.height));
     $(".element-width").html("width: " + Math.round(e.target.width));
+    let count = 0;
 
     canvas.on("object:moving", (e) => {
         $(".element-x").html("x: " + Math.round(e.target.left));
         $(".element-y").html("y: " + Math.round(e.target.top));
+        if(canvas.getActiveObject().get("type") != "line"){
+            count ++;
+            createGhostLines(e.target.left, e.target.top, e.target.width, e.target.height, count);
+            moveGhostline(count);
+            $(document).on("mouseup", () => {
+                removeAllGhostlines();
+            });
+        }
+
     });
+
+
+
 
     canvas.on("object:modified", (e) => {
         $(".element-height").html("height: " + Math.round(e.target.height * e.target.scaleY));
