@@ -206,17 +206,25 @@ let createButton = (left = 50, top = 50, width = 70, height = 30) => {
 let createGhost = (left, top, width, height) => {
 
     let ghostRect = new fabric.Rect({
-        id: 1,
+        id: "ghostrect",
         left,
         top,
         fill: "rgba(172, 136, 241, 0.4)",
         width,
         height,
-        strokeWidth: strokeWidth,
-        stroke: bordercolor,
+        //strokeWidth: strokeWidth,
+        //stroke: bordercolor,
     });
+    canvas.add(ghostRect);
+};
 
-    return canvas.add(ghostRect);
+let removeGhost = () => {
+    let objects = canvas.getObjects();
+    objects.forEach(object => {
+        if (object.id == "ghostrect") {
+            canvas.remove(object);
+        }
+    });
 };
 
 let createGhostLines = (left, top, width, height, count) => {
@@ -245,21 +253,70 @@ let moveGhostline = (count) => {
 let removeAllGhostlines = () => {
     let objects = canvas.getObjects();
     objects.forEach(object => {
-        if (object.id) {
+        if (typeof object.id == "number") {
             canvas.remove(object);
-            console.log("removed", object);
         }
     });
 };
 
-let removeGhost = () => {
-    let objects = canvas.getObjects();
-    objects.forEach(object => {
-        if (object.id == 1) {
-            canvas.remove(object);
+
+
+//CREATE GRID (not visible, used to make elements sticky, when wanted)
+function drawGrid(grid) {
+    return new Promise((resolve, reject) => {
+
+        for (let i = 0; i < $("#canvas").width()/grid; i++) {
+            canvas.add(new fabric.Line([i * grid, 0, i * grid, $("#canvas").height()], {selectable: false, id : "grid"}));
         }
+        for (let j = 0; j < $("#canvas").width()/grid; j++) {
+            canvas.add(new fabric.Line([0, j * grid, $("#canvas").width(), j * grid], {selectable: false, id : "grid"}));
+        }
+
+
+        canvas.on('object:moving', function(options) {
+            options.target.set({
+                left: Math.round(options.target.left / grid) * grid,
+                top: Math.round(options.target.top / grid) * grid
+            });
+        });
+        //canvas.renderAll()
     });
-};
+}
+
+//INITIAL DRAW GRID OF LOAD
+var grid;
+$(document).ready(() => {
+    drawGrid(10);
+});
+
+
+// let removeGrid = () => {
+//     return new Promise((resolve, reject) => {
+//
+//     function removeObjects(objects) {
+//         console.log("start", objects.length);
+//         for (let i = 0; i < objects.length; i ++) {
+//             if (objects[i].id == "grid") {
+//                 canvas.remove(objects[i]);
+//                 console.log(i);
+//             }
+//             if(i == objects.length - 1) {
+//                 console.log("is last item?", i == objects.length - 1);
+//                 console.log("objects.length", objects.length);
+//                 console.log("last line removed - timeout - index:", i);
+//                 if(canvas.getObjects().length > 0) {
+//                     console.log("not done");
+//                     removeObjects(canvas.getObjects());
+//                 } else {
+//                     console.log("done");
+//                 }
+//             }
+//         }
+//     }
+//     removeObjects(canvas.getObjects());
+//
+//     });
+// };
 
 //CREATING DEFAULT ELEMENTS ON BUTTON
 $(".create-rect").on("click", function() {
@@ -293,6 +350,8 @@ $(".create-inputfield").on("click", () => {
 $(".create-button").on("click", () => {
     createButton();
 });
+
+
 
 
 //KEYBOARD SHORTCUTS
@@ -511,9 +570,6 @@ canvas.on('object:selected', function(e) {
 
     });
 
-
-
-
     canvas.on("object:modified", (e) => {
         $(".element-height").html("height: " + Math.round(e.target.height * e.target.scaleY));
         $(".element-width").html("width: " + Math.round(e.target.width * e.target.scaleX));
@@ -622,10 +678,18 @@ $(".layout-settings input:checkbox").change(function() {
 });
 
 $("#grid-size").on("change", () => {
+    //grid = $("#range-bar")[0].value;
     let input = $("#range-bar")[0].value+"px";
     let prop = input + " " + input;
     $("#range-number").html(input);
     $("#canvas").css("background-size", prop);
+
+    //console.log("initialyise change grid to ", grid);
+
+    //removeGrid()
+    // .then(() => {
+    //     drawGrid(grid);
+    // });
 });
 
 //STYLING SETTINGS
@@ -681,6 +745,7 @@ $(".wireframe").off("mousedown").mousedown((e) => {
         let width = Math.abs(initialX - finalX);
         let height = Math.abs(initialY - finalY);
 
+
         if(wasDragging && (width > 30 || height > 30) && !activeObject) {
 
             $("body").append("<div class='adding-new-element'></div>");
@@ -689,7 +754,6 @@ $(".wireframe").off("mousedown").mousedown((e) => {
             $(".adding-new-element").css("top", initialY - (initialY - finalY));
 
             createGhost(left, top, width, height);
-
 
             $(".adding-new-element").html(`
                 <button class="create-rect-page">Rectangle</button>
