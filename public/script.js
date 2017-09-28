@@ -611,8 +611,11 @@ $(".wireframe").off("mousedown").mousedown((e) => {
         let activeObject = canvas.getActiveObject();
         var finalX = evt.pageX;
         var finalY = evt.pageY;
-        let left = initialX - $(".wireframe").offset().left;
-        let top = initialY - $(".wireframe").offset().top;
+
+        let left = initialX < finalX ? initialX - $(".wireframe").offset().left : finalX - $(".wireframe").offset().left;
+
+        let top = initialY < finalY ? initialY - $(".wireframe").offset().top : finalY - $(".wireframe").offset().top;
+
         let width = Math.abs(initialX - finalX);
         let height = Math.abs(initialY - finalY);
 
