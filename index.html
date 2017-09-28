@@ -38,14 +38,14 @@
         <div class="settings-layover"></div>
 
         <div class="settings">
-            <img src="close.png" class="img" />
+            <img src="close.png" id="close-settings" />
             <div class="view-settings">
                 <h3>View options</h3>
                 <label for="grid-view">
                     <input id="view-grid" type="checkbox" name="view-grid" checked>Grid View <br>
                     <div id="grid-size">
-                        <input type="range" id="range-bar"  min="10" max="50" value="20" />
-                        <span id="range-number">20</span>
+                        <input type="range" id="range-bar"  min="10" max="50" step="5" value="20" />
+                        <span id="range-number">20px</span>
                     </div>
                 </label>
                 <label for="column-view">

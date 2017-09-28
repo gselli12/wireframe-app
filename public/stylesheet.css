@@ -9,6 +9,22 @@ header {
     flex-direction: row;
 }
 
+button {
+    background-color: #56AAFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin: 3px;
+}
+
+button:hover, #save-button:hover {
+    cursor: pointer;
+}
+
+#save-button {
+    margin-left: 270px;
+}
+
 .wireframe {
     margin-top: 50px;
     margin-left: 100px;
@@ -148,7 +164,7 @@ header {
 
 .settings {
     height: 1000px;
-    width: 300px;
+    width: 400px;
     position: absolute;
     z-index: 200;
     top: 0;
@@ -156,7 +172,15 @@ header {
     background-color: black;
     transform: translateX(100%);
     color: white;
+    padding-left: 10px;
+}
 
+#close-settings {
+    position: relative;
+    left: 200px;
+    top: 20px;
+    width: 30px;
+    height: 30px;
 }
 
 .view-settings {
@@ -230,7 +254,6 @@ header {
 .adding-new-element {
     max-width: 300px;
     max-height: 50px;
-    background-color: red;
     position: absolute;
     display: flex;
     flex-direction: row;

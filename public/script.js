@@ -124,10 +124,9 @@ let createText = (left = 50, top = 50, width = 200, height = 30) => {
         textAlign: 'left',
         width,
         height,
-        backgroundColor: fillcolor,
         shadow: new fabric.Shadow( { color: 'rgba(0,0,0,0.3)', offsetX: 0.05, offsetY: 0.05 }),
         borderColor: bordercolor,
-        fill: fontcolor
+        fill: "fontcolor"
     };
 
 
@@ -147,7 +146,6 @@ let createHeading = (left = 50, top = 50, width = 200, height = 60) => {
         textAlign: 'left',
         width,
         height,
-        backgroundColor: fillcolor,
         shadow: new fabric.Shadow( { color: 'rgba(0,0,0,0.3)', offsetX: 0.05, offsetY: 0.05 }),
         borderColor: bordercolor,
         fill: fontcolor
@@ -212,8 +210,6 @@ let createGhost = (left, top, width, height) => {
         fill: "rgba(172, 136, 241, 0.4)",
         width,
         height,
-        //strokeWidth: strokeWidth,
-        //stroke: bordercolor,
     });
     canvas.add(ghostRect);
 };
@@ -259,65 +255,6 @@ let removeAllGhostlines = () => {
     });
 };
 
-
-
-//CREATE GRID (not visible, used to make elements sticky, when wanted)
-function drawGrid(grid) {
-    return new Promise((resolve, reject) => {
-
-        for (let i = 0; i < $("#canvas").width()/grid; i++) {
-            canvas.add(new fabric.Line([i * grid, 0, i * grid, $("#canvas").height()], {selectable: false, id : "grid"}));
-        }
-        for (let j = 0; j < $("#canvas").width()/grid; j++) {
-            canvas.add(new fabric.Line([0, j * grid, $("#canvas").width(), j * grid], {selectable: false, id : "grid"}));
-        }
-
-
-        canvas.on('object:moving', function(options) {
-            options.target.set({
-                left: Math.round(options.target.left / grid) * grid,
-                top: Math.round(options.target.top / grid) * grid
-            });
-        });
-        //canvas.renderAll()
-    });
-}
-
-//INITIAL DRAW GRID OF LOAD
-var grid;
-$(document).ready(() => {
-    drawGrid(10);
-});
-
-
-// let removeGrid = () => {
-//     return new Promise((resolve, reject) => {
-//
-//     function removeObjects(objects) {
-//         console.log("start", objects.length);
-//         for (let i = 0; i < objects.length; i ++) {
-//             if (objects[i].id == "grid") {
-//                 canvas.remove(objects[i]);
-//                 console.log(i);
-//             }
-//             if(i == objects.length - 1) {
-//                 console.log("is last item?", i == objects.length - 1);
-//                 console.log("objects.length", objects.length);
-//                 console.log("last line removed - timeout - index:", i);
-//                 if(canvas.getObjects().length > 0) {
-//                     console.log("not done");
-//                     removeObjects(canvas.getObjects());
-//                 } else {
-//                     console.log("done");
-//                 }
-//             }
-//         }
-//     }
-//     removeObjects(canvas.getObjects());
-//
-//     });
-// };
-
 //CREATING DEFAULT ELEMENTS ON BUTTON
 $(".create-rect").on("click", function() {
     createRect();
@@ -350,8 +287,6 @@ $(".create-inputfield").on("click", () => {
 $(".create-button").on("click", () => {
     createButton();
 });
-
-
 
 
 //KEYBOARD SHORTCUTS
@@ -404,6 +339,12 @@ let onKeyDownHandler = (e) => {
         copiedObjects.push(activeObject);
         canvas.remove(activeObject);
         return;
+    }
+
+    //SAVE ON CTRL + S
+    else if(ctrl && e.keyCode == 83) {
+        e.preventDefault();
+        save();
     }
 };
 
@@ -541,6 +482,15 @@ let mouseDownHandler = (e) => {
     }
 };
 
+//CREATE GRID (not visible, used to make elements sticky, when wanted)
+var grid = 20;
+canvas.on('object:moving', function(options) {
+    options.target.set({
+        left: Math.round(options.target.left / grid) * grid,
+        top: Math.round(options.target.top / grid) * grid
+    });
+});
+
 
 //DETECTING CURSOR POSITION IN CANVAS
 $(".wireframe").mousemove((e) => {
@@ -580,6 +530,10 @@ canvas.on('object:selected', function(e) {
 
 //SAVING
 $("#save-button").click(function(){
+    save();
+});
+
+let save = () => {
     let json = JSON.stringify(canvas);
     if(!urlString) {
         urlString = makeid();
@@ -606,7 +560,7 @@ $("#save-button").click(function(){
             console.log(err);
         }
     });
-});
+};
 
 function makeid() {
     var text = "";
@@ -630,7 +584,7 @@ $(".settings-layover").on("click", () => {
     $(".settings").removeClass("visible");
 });
 
-$(".close-button").on("click", () => {
+$("#close-settings").on("click", () => {
     $(".settings-layover").removeClass("visible");
     $(".settings").removeClass("visible");
 });
@@ -678,18 +632,12 @@ $(".layout-settings input:checkbox").change(function() {
 });
 
 $("#grid-size").on("change", () => {
-    //grid = $("#range-bar")[0].value;
+    grid = $("#range-bar")[0].value;
     let input = $("#range-bar")[0].value+"px";
     let prop = input + " " + input;
     $("#range-number").html(input);
     $("#canvas").css("background-size", prop);
 
-    //console.log("initialyise change grid to ", grid);
-
-    //removeGrid()
-    // .then(() => {
-    //     drawGrid(grid);
-    // });
 });
 
 //STYLING SETTINGS

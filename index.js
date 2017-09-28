@@ -60,7 +60,7 @@ app.post("/api/:string", (req, res) => {
         ;
     } else {
         console.log("not new", urlString);
-        db.query(`UPDATE wireframes SET wireframe_object = ($2) background_color = ($3), fill_color = ($4), font_color = ($5) WHERE url_string = ($1);`, [urlString, wireframe, backgroundcolor, fillcolor, fontcolor], (err, results) => {
+        db.query(`UPDATE wireframes SET wireframe_object = ($2), background_color = ($3), fill_color = ($4), font_color = ($5) WHERE url_string = ($1);`, [urlString, wireframe, backgroundcolor, fillcolor, fontcolor], (err, results) => {
             if(err) {
                 console.log(err);
             } else {
