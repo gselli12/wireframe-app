@@ -1,9 +1,10 @@
+//SETUP
 const express = require('express');
 const app = express();
 var bodyParser = require('body-parser');
 const spicedPG = require("spiced-pg");
 var url = require('url');
-
+var cookieSession = require("cookie-session");
 
 let db;
 if(process.env.DATABASE_URL) {
@@ -13,13 +14,23 @@ if(process.env.DATABASE_URL) {
     db = spicedPG("postgres:" + secret.username + ":" + secret.password + "@localhost:5432/wireframe");
 }
 
-
+//MIDDLEWARE
 app.use(express.static(__dirname + "/public"));
 
 app.use(bodyParser.json());
 
+app.use(require("cookie-parser")());
+
+app.use(cookieSession({
+    name: "session",
+    secret: "secret",
+    maxAge: 14*24*60*60*1000
+}));
+
+
+//ROUTES
 app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/public/index.html");
+    res.sendFile(__dirname + "/index.html");
 });
 
 app.post("/api/:string", (req, res) => {
@@ -39,9 +50,14 @@ app.post("/api/:string", (req, res) => {
             if(err) {
                 console.log(err);
             } else {
+                req.session.user = urlString;
+                console.log(req.session);
                 return results;
             }
-        });
+        }).then(() => {
+            res.json({success: true});
+        })
+        ;
     } else {
         console.log("not new", urlString);
         db.query(`UPDATE wireframes SET wireframe_object = ($2) background_color = ($3), fill_color = ($4), font_color = ($5) WHERE url_string = ($1);`, [urlString, wireframe, backgroundcolor, fillcolor, fontcolor], (err, results) => {
@@ -50,11 +66,25 @@ app.post("/api/:string", (req, res) => {
             } else {
                 return results;
             }
+        }).then(() => {
+            res.json({success: true});
         });
     }
-    res.json({success: true});
 });
 
+app.get("/api/hasCookie", (req, res) => {
+    if(req.session.user) {
+        res.json({
+            success: true,
+            cookie: req.session.user,
+        });
+    } else {
+        res.json({
+            success: true,
+            cookie: false
+        });
+    }
+});
 
 app.get("/api/:string", (req, res) => {
     let string = req.params.string;
@@ -68,8 +98,7 @@ app.get("/api/:string", (req, res) => {
     })
         .then(results => {
             if(results.rows.length == 0) {
-                res.status(404);
-                res.send();
+                res.sendFile(__dirname + "/404.html");
             } else {
                 res.json(results.rows);
             }
@@ -81,7 +110,7 @@ app.get("/404", (req, res) => {
 });
 
 app.get("*", (req, res) => {
-    res.sendFile(__dirname + "/public/index.html");
+    res.sendFile(__dirname + "/index.html");
 });
 
 app.listen(8080, () => {

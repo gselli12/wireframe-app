@@ -8,10 +8,10 @@ var fontcolor = "#000000";
 const strokeWidth = 1;
 const fontFamily = "'Patrick Hand SC', cursive";
 
-//IF USER WANTS TO ACCESS SAVED CANVAS, LOAD IT
-if(window.location.pathname != "/") {
+//FUNCTION TO GET OLD CANVAS
+let getCanvas = (string) => {
     $.ajax({
-        url: window.location.origin + "/api" + window.location.pathname,
+        url: window.location.origin + "/api" + string,
         success: (data) => {
             urlString = data[0].url_string;
             let wireframeObject = data[0].wireframe_object;
@@ -28,7 +28,36 @@ if(window.location.pathname != "/") {
             }
         }
     });
+};
+
+//ON LOAD, CHECK IF USER WANT TO ACCESS OLD CANVAS OR HAS WORKED ON ONE RECENTLY
+if(window.location.pathname != "/") {
+    getCanvas(window.location.pathname);
+} else {
+    $.ajax({
+        url: window.location.origin + "/api/hasCookie",
+        success: (data) => {
+            if(data.cookie) {
+                urlString = data.cookie;
+                $(".cookie-overlay-shadow").removeClass("hidden");
+            } else {
+                return;
+            }
+        }
+    });
 }
+
+//HANDLE CASE WHEN USER HAS COOKIES
+$(".load-old-canvas").click(() => {
+    getCanvas("/" + urlString);
+    window.history.pushState("", "", "/" + urlString);
+    $(".cookie-overlay-shadow").addClass("hidden");
+});
+
+$(".start-new-canvas").click(() => {
+    $(".cookie-overlay-shadow").addClass("hidden");
+});
+
 
 //CREATORFUNCTIONS
 let createRect = (left = 50, top = 50, width = 200, height = 50) => {
