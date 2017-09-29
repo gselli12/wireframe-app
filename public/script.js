@@ -89,7 +89,7 @@ let createLine = (left = 50, top = 50, width = 250, height = 50) => {
     let line = new fabric.Line([left, top, width, height] , {
         left,
         top,
-        stroke: bordercolor
+        stroke: "black"
     });
     return canvas.add(line);
 };
@@ -126,7 +126,7 @@ let createText = (left = 50, top = 50, width = 200, height = 30) => {
         height,
         shadow: new fabric.Shadow( { color: 'rgba(0,0,0,0.3)', offsetX: 0.05, offsetY: 0.05 }),
         borderColor: bordercolor,
-        fill: "fontcolor"
+        fill: fontcolor
     };
 
 
@@ -618,16 +618,25 @@ $(".layout-settings input:checkbox").change(function() {
         $("#canvas").height("667");
         $(".wireframe").width("375");
         $(".wireframe").height("667");
+        $(".phone").removeClass("hidden");
+        $(".laptop").addClass("hidden");
+        $(".tablet").addClass("hidden");
     } else if ($("#tablet-layout").is(":checked")){
         $("#canvas").width("614");
         $("#canvas").height("756");
         $(".wireframe").width("614");
         $(".wireframe").height("756");
+        $(".tablet").removeClass("hidden");
+        $(".phone").addClass("hidden");
+        $(".laptop").addClass("hidden");
     } else {
         $("#canvas").width("1024");
         $("#canvas").height("600");
         $(".wireframe").width("1024");
         $(".wireframe").height("600");
+        $(".laptop").removeClass("hidden");
+        $(".phone").addClass("hidden");
+        $(".tablet").addClass("hidden");
     }
 });
 

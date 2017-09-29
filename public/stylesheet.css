@@ -2,6 +2,7 @@ body {
     background-color: rgb(185, 186, 178);
     font-family: 'Patrick Hand SC', cursive;
     overflow-x: hidden;
+    font-size: 20px;
 }
 
 header {
@@ -15,18 +16,28 @@ button {
     border: none;
     border-radius: 5px;
     margin: 3px;
+    font-size: 18px;
+}
+
+footer {
+    margin-top: 50px;
 }
 
 button:hover, #save-button:hover {
     cursor: pointer;
 }
 
+#settings-button {
+    margin-left: 50px;
+}
+
 #save-button {
-    margin-left: 270px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .wireframe {
-    margin-top: 50px;
+    margin-top: 90px;
     margin-left: 100px;
     width: 1024px;
     height: 600px;
@@ -50,7 +61,7 @@ button:hover, #save-button:hover {
 
 .phone-top {
     height: 50px;
-    margin-top: -20px;
+    margin-top: -50px;
     margin-left: 87.5px;
     width: 401px;
     background-color: black;
@@ -63,7 +74,7 @@ button:hover, #save-button:hover {
 .phone-right {
     height: 667px;
     width: 12.5px;
-    margin-top: 30px;
+    /*margin-top: 30px;*/
     margin-left: 476px;
     z-index: 10;
     background-color: black;
@@ -73,7 +84,7 @@ button:hover, #save-button:hover {
 .phone-left {
     height: 667px;
     width: 12.5px;
-    margin-top: 30px;
+    /*margin-top: 30px;*/
     margin-left: 87.5px;
     z-index: 10;
     background-color: black;
@@ -82,7 +93,7 @@ button:hover, #save-button:hover {
 
 .phone-bottom {
     height: 70px;
-    margin-top: 697px;
+    margin-top: 667px;
     margin-left: 87.5px;
     width: 401px;
     background-color: black;
@@ -94,14 +105,46 @@ button:hover, #save-button:hover {
 
 .tablet-top {
     height: 50px;
-    margin-top: -20px;
-    margin-left: 87.5px;
+    margin-top: -50px;
+    margin-left: 92px;
     width: 629px;
     background-color: black;
     position: absolute;
     z-index: 10;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+}
+
+.tablet-right {
+    height: 757px;
+    width: 7px;
+    /*margin-top: 30px;*/
+    margin-left: 714px;
+    z-index: 10;
+    background-color: black;
+    position: absolute;
+}
+
+.tablet-left {
+    height: 757px;
+    width: 7px;
+    /*margin-top: 30px;*/
+    margin-left: 92px;
+    z-index: 10;
+    background-color: black;
+    position: absolute;
+}
+
+.tablet-bottom {
+    height: 70px;
+    margin-top: 757px;
+    margin-left: 92px;
+    width: 629px;
+    background-color: black;
+    position: absolute;
+    z-index: 10;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .buttons {
@@ -160,6 +203,7 @@ button:hover, #save-button:hover {
     left: 0;
     top: 0;
     transform: translateX(100%);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .settings {
@@ -252,11 +296,14 @@ button:hover, #save-button:hover {
 }
 
 .adding-new-element {
-    max-width: 300px;
+    max-width: 750px;
     max-height: 50px;
     position: absolute;
     display: flex;
     flex-direction: row;
+    background-color: white;
+    border-radius: 5px;
+    z-index: 4000;
 }
 
 .cookie-overlay-shadow {
