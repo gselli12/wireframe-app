@@ -18,9 +18,6 @@
     "spiced-pg": "github:spicedacademy/spiced-pg"
   },
   "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gselli12/wireframe-app.git"
