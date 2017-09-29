@@ -86,6 +86,11 @@ app.get("/api/hasCookie", (req, res) => {
     }
 });
 
+app.get("/api/removeCookie", (req, res) => {
+    req.session = null;
+    res.json({success: true});
+});
+
 app.get("/api/:string", (req, res) => {
     let string = req.params.string;
 

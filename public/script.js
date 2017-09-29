@@ -56,6 +56,7 @@ $(".load-old-canvas").click(() => {
 
 $(".start-new-canvas").click(() => {
     $(".cookie-overlay-shadow").addClass("hidden");
+    urlString = null;
 });
 
 
