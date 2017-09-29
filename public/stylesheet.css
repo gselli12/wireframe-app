@@ -331,3 +331,8 @@ button:hover, #save-button:hover {
     justify-content: center;
     align-items: center;
 }
+
+.cookie-button {
+    width: 150px;
+    height: 30px;
+}

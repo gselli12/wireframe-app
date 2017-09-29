@@ -502,8 +502,8 @@ $(".wireframe").mousemove((e) => {
 canvas.on('object:selected', function(e) {
     $(".element-x").html("x: " + Math.round(e.target.left));
     $(".element-y").html("y: " + Math.round(e.target.top));
-    $(".element-height").html("height: " + Math.round(e.target.height));
-    $(".element-width").html("width: " + Math.round(e.target.width));
+    $(".element-height").html("height: " + Math.round(e.target.height * e.target.scaleY));
+    $(".element-width").html("width: " + Math.round(e.target.width * e.target.scaleX));
     let count = 0;
 
     canvas.on("object:moving", (e) => {
@@ -511,7 +511,7 @@ canvas.on('object:selected', function(e) {
         $(".element-y").html("y: " + Math.round(e.target.top));
         if(canvas.getActiveObject().get("type") != "line"){
             count ++;
-            createGhostLines(e.target.left, e.target.top, e.target.width, e.target.height, count);
+            createGhostLines(e.target.left, e.target.top, e.target.width * e.target.scaleX, e.target.height * e.target.scaleY, count);
             moveGhostline(count);
             $(document).on("mouseup", () => {
                 removeAllGhostlines();

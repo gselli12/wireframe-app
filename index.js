@@ -109,6 +109,11 @@ app.get("/404", (req, res) => {
     res.sendFile(__dirname + "/public/404.html");
 });
 
+app.get("/logout", (req, res) => {
+    req.session = null;
+    res.redirect("/");
+});
+
 app.get("*", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
