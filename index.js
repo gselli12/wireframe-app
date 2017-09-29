@@ -118,6 +118,6 @@ app.get("*", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
 
-app.listen(8080, () => {
+app.listen(process.env.PORT || 8080, () => {
     console.log("listening on port 8080");
 });
