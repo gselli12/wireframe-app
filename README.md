@@ -6,6 +6,9 @@ The app is built using fabric.js as a drawing library and jQuery to manipulate t
 
 Hosted on [Heroku](https://wireframe-thomas.herokuapp.com/) (using the free Heroku plan, so it might take a few seconds to load)
 
+## Demo:
+![Wireframe App GIF](https://github.com/gselli12/wireframe-app/blob/master/Images/gifForReadme.gif)
+
 ## Tech Stack:
 * jQuery
 * Fabric.js
@@ -44,9 +47,6 @@ Hosted on [Heroku](https://wireframe-thomas.herokuapp.com/) (using the free Hero
 * Allow for image upload.
 * Allow changing the background color of image elements, input fields, and buttons.
 * Bug fixes
-
-### Visual demonstration:
-![Wireframe App GIF](https://github.com/gselli12/wireframe-app/blob/master/Images/gifForReadme.gif)
 
 ### Sample wireframe created:
 ![Wireframe App example](https://github.com/gselli12/wireframe-app/blob/master/Images/sample_wireframe.PNG)
