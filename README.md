@@ -27,16 +27,16 @@ Hosted on [Heroku](https://wireframe-thomas.herokuapp.com/) (using the free Hero
     * Delete
 7. Setting options:
     * View options:
-        ....* Grid view: grid size can be adapted. Elements align with grid when dragging them
-        ....* Column view: allows you to make sure elements are horizontally aligned.
+      - Grid view: grid size can be adapted. Elements align with grid when dragging them
+      - Column view: allows you to make sure elements are horizontally aligned.
     * Styling options:
-        ....* Background color: allows you to set the background color of your canvas
-        ....* Default fill color: allows you change the default fill color. All rectangles and circles created after that will have that fill color.
-        ....* Default font color: allows you to change the default font color. All text elements created after that will have that fill color.
-        ....* Layout options:
-        ....* Laptop: displays canvas as a web browser to design web apps
-        ....* Phone: displays canvas as a phone to allow for design for Apps on phone (not functional yet)
-        ....* Tablet: displays canvas as a tablet to allow for design for Apps on tablets (not functional yet).
+      - Background color: allows you to set the background color of your canvas
+      - Default fill color: allows you change the default fill color. All rectangles and circles created after that will have that fill color.
+      - Default font color: allows you to change the default font color. All text elements created after that will have that fill color.
+    * Layout options:
+      - Laptop: displays canvas as a web browser to design web apps
+      - Phone: displays canvas as a phone to allow for design for Apps on phone (not functional yet)
+      - Tablet: displays canvas as a tablet to allow for design for Apps on tablets (not functional yet).
 8. Current cursor position, element position, and element sizes are displayed in the bottom left corner.
 
 ## To do's for the future:
