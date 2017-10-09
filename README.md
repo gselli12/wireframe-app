@@ -1,8 +1,7 @@
 # Wireframe App
 
 ## Summary:
-This Wireframe App is a quick an easy wireframe app, that is intended to make the developer take a step back and think about the UI of the final product, before starting to code. An app like that also allows for easier communication between designers and developers.
-The app is built using fabric.js as a drawing library and jQuery to manipulate the DOM.
+This Wireframe App is a quick an easy solution, that allows the developers to take a step back and think about the UI of the final product, before starting to code. An app like that also allows for easier communication between designers and developers.
 
 Hosted on [Heroku](https://wireframe-thomas.herokuapp.com/) (using the free Heroku plan, so it might take a few seconds to load)
 
